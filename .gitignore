@@ -35,3 +35,7 @@ build/
 ### MacOS ###
 .DSTore
 
+
+## Produto ##
+produtos.json
+carrinho.json
