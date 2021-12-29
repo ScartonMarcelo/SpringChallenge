@@ -11,16 +11,16 @@ import java.util.List;
 @Component
 public class ArticleRepository {
 
-  	private static final String JSON_FILE_NAME = "carrinho.json";
+  	private static final String JSON_FILE_NAME = "produtos.json";
 
 	// Serializa produtos em JSON
 	public static void salvaProdutoCarrinho(List<Produto> produtos) {
-	  try{
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(new File(JSON_FILE_NAME), produtos);
-	  }catch(IOException e){
-		System.out.println(e.getMessage());
-	  }
+		  try{
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.writeValue(new File(JSON_FILE_NAME), produtos);
+		  }catch(IOException e){
+			System.out.println(e.getMessage());
+		  }
 	}
 
 	// Desserializa Produtos do carrinho
