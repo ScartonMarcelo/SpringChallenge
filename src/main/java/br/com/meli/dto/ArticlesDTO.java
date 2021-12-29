@@ -2,13 +2,16 @@ package br.com.meli.dto;
 
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.Produto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -16,19 +19,30 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticlesDTO {
 
-	private List<Produto> articles = new ArrayList<>();
+	private List<ProdutoDTO> articles = new ArrayList<>();
 
-	// Converte Model em DTO
+	/**
+	 * @Author Thomaz Ferreira
+	 * @Description Converte objeto Articles em ArticlesDTO
+	 * @param Articles article
+	 * @return ArticlesDTO
+	 */
 	public static ArticlesDTO converte(Articles article){
 	  	return ArticlesDTO.builder()
-		  	.articles(article.getArticles())
+		  	.articles(ProdutoDTO.converteLista(article))
 		  	.build();
 	}
 
-	// Converte DTO em Model
+
+	/**
+	 * @author Thomaz Ferreira
+	 * @Description Converte objeto ArticleDTO em Article
+	 * @param Articles article
+	 * @return ArticlesDTO
+	 */
   	public static Articles converte(ArticlesDTO dto){
 	  	return Articles.builder()
-		  	.articles(dto.getArticles())
+		  	.articles(ProdutoDTO.converteLista(dto))
 		  	.build();
 	}
 }
