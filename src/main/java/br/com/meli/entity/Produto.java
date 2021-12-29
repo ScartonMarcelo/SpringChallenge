@@ -1,9 +1,6 @@
 package br.com.meli.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,7 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Produto {
 
-    private long id;
+    private long productId;
     private String name;
     private String category;
     private String brand;
