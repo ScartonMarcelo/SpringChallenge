@@ -8,7 +8,7 @@ import br.com.meli.entity.Produto;
 
 /**
  * @author André Arroxellas
- * @description métodos de ordenação
+ * @description métodos de ordenação e filtro
  */
 public class OrdenadorProdutos {
 	public List<Produto> ordenaAlfabeticamenteCrescente(List<Produto> listaProdutos) {
@@ -49,13 +49,57 @@ public class OrdenadorProdutos {
 
 	public List<Produto> filtraFreeShipping(List<Produto> listaProdutos) {
 		return listaProdutos.stream()
-				.filter(p -> p.isFreeShipping())
+				.filter(p -> p.getFreeShipping())
 				.collect(Collectors.toList());
 	}
 
 	public List<Produto> filtraNonFreeShipping(List<Produto> listaProdutos) {
 		return listaProdutos.stream()
-				.filter(p -> !p.isFreeShipping())
+				.filter(p -> !p.getFreeShipping())
 				.collect(Collectors.toList());
+	}
+
+	enum Filtro {
+		ORDENA_ALFABETICAMENTE_CRESCENTE(0),
+		ORDENA_ALFABETICAMENTE_DECRESCENTE(1),
+		ORDENA_MAIOR_PRECO(2),
+		ORDENA_MENOR_PRECO(3),
+		FILTRA_CATEGORY_NAME(4),
+		FILTRA_BRAND_NAME(5),
+		FILTRA_FREE_SHIPPING(6),
+		FILTRA_NON_FREE_SHIPPING(7);
+
+		private int valor;
+
+		private Filtro(int valor) {
+			this.valor = valor;
+		}
+
+		public int getValor() {
+			return this.valor;
+		}
+	}
+
+	public List<Produto> OrdenarProdutos(List<Produto> listaProdutos, String optional, Filtro filtro) {
+		switch (filtro) {
+			case ORDENA_ALFABETICAMENTE_CRESCENTE:
+				return this.ordenaAlfabeticamenteCrescente(listaProdutos);
+			case ORDENA_ALFABETICAMENTE_DECRESCENTE:
+				return this.ordenaAlfabeticamenteDecrescente(listaProdutos);
+			case ORDENA_MAIOR_PRECO:
+				return this.ordenaPrecoMaior(listaProdutos);
+			case ORDENA_MENOR_PRECO:
+				return this.ordenaPrecoMenor(listaProdutos);
+			case FILTRA_CATEGORY_NAME:
+				return this.filtraCategoryName(listaProdutos, optional);
+			case FILTRA_BRAND_NAME:
+				return this.filtraBrandName(listaProdutos, optional);
+			case FILTRA_FREE_SHIPPING:
+				return this.filtraFreeShipping(listaProdutos);
+			case FILTRA_NON_FREE_SHIPPING:
+				return this.filtraNonFreeShipping(listaProdutos);
+			default:
+				throw new IllegalArgumentException();
+		}
 	}
 }
