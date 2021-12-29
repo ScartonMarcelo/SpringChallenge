@@ -2,7 +2,6 @@ package br.com.meli.controller;
 
 
 import br.com.meli.entity.Produto;
-import br.com.meli.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-public class ProdutoController<cea93af71f0d7867ec88fdd95673b20826723cb> {
+public class ProdutoController{
 
-    @Autowired
-
-    private ProdutoService produtoService;
+    //@Autowired
+    //private ProdutoService produtoService;
 
 
 @GetMapping("/articles")
