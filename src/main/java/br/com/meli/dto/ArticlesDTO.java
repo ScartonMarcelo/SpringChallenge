@@ -1,5 +1,6 @@
 package br.com.meli.dto;
 
+import br.com.meli.entity.Articles;
 import br.com.meli.entity.Produto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,35 +19,30 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ArticlesDTO {
 
-	private Long productId;
-	private String name;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String category;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String brand;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private BigDecimal price;
-	private Integer quantity;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Boolean freeShipping;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private String prestige;
+	private List<ProdutoDTO> articles = new ArrayList<>();
 
-	public static ArticlesDTO converte(Produto produto) {
-		return ArticlesDTO.builder()
-			.productId(produto.getProductId())
-			.name(produto.getName())
-			.category(produto.getCategory())
-			.brand(produto.getCategory())
-			.price(produto.getPrice())
-			.quantity(produto.getQuantity())
-			.freeShipping(produto.getFreeShipping())
-			.prestige(produto.getPrestige())
-			.build();
+	/**
+	 * @Author Thomaz Ferreira
+	 * @Description Converte objeto Articles em ArticlesDTO
+	 * @param Articles article
+	 * @return ArticlesDTO
+	 */
+	public static ArticlesDTO converte(Articles article){
+	  	return ArticlesDTO.builder()
+		  	.articles(ProdutoDTO.converteLista(article))
+		  	.build();
 	}
 
 
-	public static List<ArticlesDTO> converte(List<Produto> articles) {
-		return articles.stream().map(a -> converte(a)).collect(Collectors.toList());
+	/**
+	 * @author Thomaz Ferreira
+	 * @Description Converte objeto ArticleDTO em Article
+	 * @param Articles article
+	 * @return ArticlesDTO
+	 */
+  	public static Articles converte(ArticlesDTO dto){
+	  	return Articles.builder()
+		  	.articles(ProdutoDTO.converteLista(dto))
+		  	.build();
 	}
 }

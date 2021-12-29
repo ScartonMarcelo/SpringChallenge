@@ -22,10 +22,17 @@ public class ArticlesController {
 	private ArticlesService articleService;
 
 
-	@PostMapping("/insert-articles-request")
-	private ResponseEntity<List<ArticlesDTO>> cadastraProduto(@RequestBody Articles articlesList, UriComponentsBuilder uriBuilder) {
-		articleService.salvarProdutos(articlesList);
-		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articlesList.getArticles()));
-	}
+	/**
+	 * Author: Thomaz Ferreira
+	 * @Description Rota para cadastrar produtos
+	 * @param ArticlesDTO dto
+	 * @param UriComponentsBuilder uriBuilder
+	 * @return ResponseEntity<ArticlesDTO>
+	 */
+  @PostMapping("/insert-articles-request")
+  private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder){
+	  articleService.salvarProdutos(articles);
+	  URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
+	  return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+  }
 }
