@@ -11,7 +11,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Produto {
 
-    private long productId;
+	/**
+	 * @Author Thomaz Ferreira
+	 * @Description Model Produto
+	 */
+
+    private Long productId;
     private String name;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String category;
@@ -19,9 +24,9 @@ public class Produto {
     private String brand;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigDecimal price;
-    private int quantity;
+    private Integer quantity;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean freeShipping;
+    private Boolean freeShipping;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String prestige;
 }

@@ -18,49 +18,58 @@ import br.com.meli.entity.Produto;
 @AllArgsConstructor
 public class ProdutoDTO {
 
-    // TODO: Dicutir sobre isto
+	/**
+	 * @Author Thomaz Ferreira, Thiago Henrique, Francisco Alves, Marcelo Scarton, André Arroxellas
+	 * @Description Model Produto DTO
+	 */
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private long productId;
+    private Long productId;
     private String name;
     private String category;
     private String brand;
     private BigDecimal price;
-    private int quantity;
-    private boolean freeShipping;
+    private Integer quantity;
+    private Boolean freeShipping;
     private String prestige;
 
+	/**
+	 * @Author Thomaz Ferreira
+	 * @Description Converte obejto ProdutoDTO em Produto
+	 * @param ProdutoDTO dto
+	 * @return Produto
+	 */
 
-		// Converte DTO em Model
-		public static Produto converte(ProdutoDTO dto){
-			return Produto.builder()
-				.productId(dto.getProductId())
-				.name(dto.getName())
-				.category(dto.getCategory())
-				.brand(dto.getBrand())
-				.price(dto.getPrice())
-				.quantity(dto.getQuantity())
-				.freeShipping(dto.isFreeShipping())
-				.prestige(dto.getPrestige())
-				.build();
-		}
-
-		// Converte Model em DTO
-		public static ProdutoDTO converte(Produto p){
-			return ProdutoDTO.builder()
-				.productId(p.getProductId())
-				.name(p.getName())
-				.category(p.getCategory())
-				.brand(p.getBrand())
-				.price(p.getPrice())
-				.quantity(p.getQuantity())
-				.freeShipping(p.isFreeShipping())
-				.prestige(p.getPrestige())
-				.build();
-		}
+	public static Produto converte(ProdutoDTO dto){
+		return Produto.builder()
+			.productId(dto.getProductId())
+			.name(dto.getName())
+			.category(dto.getCategory())
+			.brand(dto.getBrand())
+			.price(dto.getPrice())
+			.quantity(dto.getQuantity())
+			.freeShipping(dto.getFreeShipping())
+			.prestige(dto.getPrestige())
+			.build();
+	}
 
 
-		// Converte List<Produto> em List<ProdutoDTO>
-  		public static List<ProdutoDTO> converte(List<Produto> produtos){
-		  	return produtos.stream().map(p -> converte(p)).collect(Collectors.toList());
-		}
+	/**
+	 * @Author Thomaz Ferreira
+	 * @Description Converte obejto Produto em ProdutoDTO
+	 * @param Produto p
+	 * @return ProdutoDTO
+	 */
+	public static ProdutoDTO converte(Produto p){
+		return ProdutoDTO.builder()
+			.productId(p.getProductId())
+			.name(p.getName())
+			.category(p.getCategory())
+			.brand(p.getBrand())
+			.price(p.getPrice())
+			.quantity(p.getQuantity())
+			.freeShipping(p.getFreeShipping())
+			.prestige(p.getPrestige())
+			.build();
+	}
 }
