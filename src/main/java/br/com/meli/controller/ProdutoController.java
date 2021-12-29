@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +21,11 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
 @GetMapping("/articles")
-	public Iterable<Produto>getListArticles(){
-			return ProdutoRepository.findAll();
-	}
+public List<Produto>getProdutos()
+{
+	List<Produto>produtoList = new ArrayList<Produto>();
+  return produtoList;
+}
 }
