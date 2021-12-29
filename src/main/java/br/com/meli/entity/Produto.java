@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Produto {
 
-    private long id;
+    private long productId;
     private String name;
     private String category;
     private String brand;
