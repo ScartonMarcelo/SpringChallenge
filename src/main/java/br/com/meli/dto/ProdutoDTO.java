@@ -16,7 +16,7 @@ public class ProdutoDTO {
 
     // TODO: Dicutir sobre isto
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private long id;
+    private long productId;
     private String name;
     private String category;
     private String brand;
