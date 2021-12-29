@@ -1,5 +1,6 @@
 package br.com.meli.controller;
 
+import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ProdutoRepository;
 import br.com.meli.service.ProdutoService;
@@ -20,12 +21,12 @@ import java.util.Optional;
 public class ProdutoController {
 
     @Autowired
+
     private ProdutoService produtoService;
 
 @GetMapping("/articles")
-public List<Produto>getProdutos()
+public ResponseEntity<ProdutoDTO>getProdutos()
 {
-	List<Produto>produtoList = new ArrayList<Produto>();
-  return produtoList;
+		return ResponseEntity.ok(ProdutoDTO.builder().build());
 }
 }
