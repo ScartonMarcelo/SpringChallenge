@@ -11,19 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.function.EntityResponse;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
 public class ArticlesController {
 
   @Autowired
-  private ArticleRepository articleRepository;
+  private ArticlesService articleService;
 
 
   @PostMapping("/insert-articles-request")
-  private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody ArticlesDTO dto){
-	Articles article = ArticlesDTO.converte(dto);
-	articleRepository.salvaProdutoCarrinho(article.getArticles());
-	return ResponseEntity.ok(ArticlesDTO.converte(article));
+  private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody ArticlesDTO dto, UriComponentsBuilder uriBuilder){
+  	Articles article = ArticlesDTO.converte(dto);
+  	articleService.salvarProdutos(article);
+  	URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
+	return ResponseEntity.created(uri).body(ArticlesDTO.converte(article));
   }
 }
