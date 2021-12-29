@@ -12,18 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-<<<<<<< HEAD
 public class ProdutoController{
 
     //@Autowired
     //private ProdutoService produtoService;
-=======
-public class ProdutoController<cea93af71f0d7867ec88fdd95673b20826723cb> {
-
-    @Autowired
-
-    private ProdutoService produtoService;
->>>>>>> a3e50efe2ec11ff699380244fe1ebea6c2cf0433
 
 
 @GetMapping("/articles")
