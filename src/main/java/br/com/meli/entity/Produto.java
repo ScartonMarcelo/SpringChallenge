@@ -18,15 +18,10 @@ public class Produto {
 
     private Long productId;
     private String name;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String category;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String brand;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigDecimal price;
     private Integer quantity;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Boolean freeShipping;
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String prestige;
 }
