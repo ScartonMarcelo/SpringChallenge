@@ -1,5 +1,6 @@
 package br.com.meli.dto;
 
+import br.com.meli.entity.Articles;
 import br.com.meli.entity.Produto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
