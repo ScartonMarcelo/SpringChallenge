@@ -14,7 +14,7 @@ public class ProdutoRepository {
 		//JSON_Mock
 		List<Produto> produtos = Arrays.asList(
 			Produto.builder()
-				.id(1)
+				.productId(1l)
 				.name("Serra de Bancada")
 				.category("Ferramentas")
 				.brand("Black & Decker")
@@ -24,7 +24,7 @@ public class ProdutoRepository {
 				.prestige("****")
 				.build(),
 			Produto.builder()
-				.id(2)
+				.productId(2l)
 				.name("Furadeira")
 				.category("Ferramentas")
 				.brand("Starboard")
@@ -34,7 +34,7 @@ public class ProdutoRepository {
 				.prestige("****")
 				.build(),
 			Produto.builder()
-				.id(3)
+				.productId(3l)
 				.name("Mini Cama elastica")
 				.category("Esportes")
 				.brand("FORTGPRO")

@@ -17,20 +17,29 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProdutoDTO {
 
-	// TODO: Dicutir sobre isto
+	/**
+	 * Author Thiago Campos
+	 * Return ProdutoDTO
+	 */
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private long id;
+	private Long productId;
 	private String name;
 	private String category;
 	private String brand;
 	private BigDecimal price;
-	private int quantity;
-	private boolean freeShipping;
+	private Integer quantity;
+	private Boolean freeShipping;
 	private String prestige;
 
+	/**
+	 * @param ProdutoDTO
+	 * @return Produto
+	 * @Author Thiago Campos
+	 * @Description Converte um ProdutoDTO em Produto
+	 */
 	public static Produto convert(ProdutoDTO dto) {
 		return Produto.builder()
-			.id(dto.id)
+			.productId(dto.productId)
 			.name(dto.name)
 			.category(dto.category)
 			.brand(dto.brand)
@@ -40,19 +49,31 @@ public class ProdutoDTO {
 			.prestige(dto.prestige).build();
 	}
 
-	public static ProdutoDTO convert(Produto produto){
+	/**
+	 * @param Produto
+	 * @return ProdutoDTO
+	 * @Author Thiago Campos
+	 * @Description Converte um Produto em ProdutoDTO
+	 */
+	public static ProdutoDTO convert(Produto produto) {
 		return ProdutoDTO.builder()
-			.id(produto.getId())
+			.productId(produto.getProductId())
 			.name(produto.getName())
 			.category(produto.getCategory())
 			.brand(produto.getBrand())
 			.price(produto.getPrice())
 			.quantity(produto.getQuantity())
-			.freeShipping(produto.isFreeShipping())
+			.freeShipping(produto.getFreeShipping())
 			.prestige(produto.getPrestige()).build();
 	}
 
-	public static List<ProdutoDTO> convert(List<Produto> list){
+	/**
+	 * @param List<Produto>
+	 * @return List<ProdutoDTO>
+	 * @Author Thiago Campos
+	 * @Description Converte uma lista de Produtos em ProdutosDTO
+	 */
+	public static List<ProdutoDTO> convert(List<Produto> list) {
 		return list.stream().map(produto -> convert(produto)).collect(Collectors.toList());
 	}
 }

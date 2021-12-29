@@ -13,12 +13,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Produto {
 
-    private long id;
-    private String name;
-    private String category;
-    private String brand;
-    private BigDecimal price;
-    private int quantity;
-    private boolean freeShipping;
-    private String prestige;
+	/**
+	 * Author Thiago Campos
+	 * Return ProdutoDTO
+	 */
+	private Long productId;
+	private String name;
+	private String category;
+	private String brand;
+	private BigDecimal price;
+	private Integer quantity;
+	private Boolean freeShipping;
+	private String prestige;
 }

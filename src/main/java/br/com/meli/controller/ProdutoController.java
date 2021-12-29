@@ -17,12 +17,17 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class ProdutoController {
 
-    @Autowired
-    private ProdutoService produtoService;
+	@Autowired
+	private ProdutoService produtoService;
 
-    @GetMapping("/category")
-    public ResponseEntity<List<ProdutoDTO>> getListByCategory(@RequestParam String categoryName){
-			List<Produto> filteredProducts = ProdutoService.filterByCategory(categoryName);
-    	return ResponseEntity.ok(ProdutoDTO.convert(filteredProducts));
-		}
+	/**
+	 * @param String categoryName
+	 * @return ResponseEntitu<< List>ProdutoDTO>>
+	 * @author thiago campos
+	 */
+	@GetMapping("/category")
+	public ResponseEntity<List<ProdutoDTO>> getListByCategory(@RequestParam String categoryName) {
+		List<Produto> filteredProducts = ProdutoService.filterByCategory(categoryName);
+		return ResponseEntity.ok(ProdutoDTO.convert(filteredProducts));
+	}
 }
