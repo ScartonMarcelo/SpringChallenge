@@ -2,7 +2,6 @@ package br.com.meli.service;
 
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
-import br.com.meli.repository.ProdutoRepository;
 import exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,4 +28,5 @@ public class ProdutoService {
 		else
 			return products;
 	}
+
 }

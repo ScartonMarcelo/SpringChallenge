@@ -12,7 +12,8 @@ import java.time.LocalDate;
 public class ProdutoExceptionAdvice {
 
 	@ExceptionHandler(value = ResourceNotFoundException.class)
-	public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException msg) {
-		return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
+
+	public ResponseEntity<?> handlePersistencia(ResourceNotFoundException resourse) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resourse.getMessage());
 	}
 }
