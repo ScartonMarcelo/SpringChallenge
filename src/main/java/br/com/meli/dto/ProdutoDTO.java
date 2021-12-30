@@ -25,19 +25,19 @@ public class ProdutoDTO {
 	 * @Description Model Produto DTO
 	 */
 
-    private Long productId;
-    private String name;
+	private Long productId;
+	private String name;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String category;
+	private String category;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String brand;
+	private String brand;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private BigDecimal price;
-    private Integer quantity;
+	private BigDecimal price;
+	private Integer quantity;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Boolean freeShipping;
+	private Boolean freeShipping;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String prestige;
+	private String prestige;
 
 	/**
 	 * @Author Thomaz Ferreira

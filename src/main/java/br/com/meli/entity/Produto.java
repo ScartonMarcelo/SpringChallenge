@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Produto {
-
 	private Long productId;
 	private String name;
 	private String category;
