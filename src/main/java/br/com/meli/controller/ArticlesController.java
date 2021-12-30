@@ -1,6 +1,7 @@
 package br.com.meli.controller;
 
 import br.com.meli.dto.ArticlesDTO;
+import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -28,48 +30,79 @@ public class ArticlesController {
 
 	List<Produto> produtos = new ArrayList<Produto>();
 
+	/**
+	 * Author: Thomaz Ferreira
+	 *
+	 * @Description Rota para cadastrar produtos
+	 * @param ArticlesDTO          dto
+	 * @param UriComponentsBuilder uriBuilder
+	 * @return ResponseEntity<ArticlesDTO>
+	 */
 
-    /**
-     * Author: Thomaz Ferreira
-     * @Description Rota para cadastrar produtos
-     * @param ArticlesDTO dto
-     * @param UriComponentsBuilder uriBuilder
-     * @return ResponseEntity<ArticlesDTO>
-     */
-  
-    @PostMapping("/insert-articles-request")
-    private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder) {
-        articleService.salvarProdutos(articles);
-        URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-        return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
-    }
+	@PostMapping("/insert-articles-request")
+	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
+			UriComponentsBuilder uriBuilder) {
+		articleService.salvarProdutos(articles);
+		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
+		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+	}
 
-    /**
-    * @Author Marcelo Scarton
-    * @description Endpoint responsavel pelo envio de pedido de compra
-    * @param ArticlesPurchase articlesPurchaseList
-    * @param UriComponentsBuilder uriBuilder
-    * @return ResponseEntity<PurchaseResponse>
-    */
-  
-    @PostMapping("/purchase-request")
-    private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList, UriComponentsBuilder uriBuilder) {
-        URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-        List<Produto> articles = articleService.retornarProdutosPurchase(articlesPurchaseList);
-        BigDecimal total = articleService.retornarTotalPurchase(articles);
-        Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
-        return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
-    }
-  
-    /**
-     * @Author: Francisco Alves , Thomaz Ferreira
-     * @Description Rota para listar produtos
-     * @return ResponseEntity<List<Produto>>
-     */
-    @GetMapping("/articles")
-    public ResponseEntity<List<Produto>> getAll()
-    {
-        produtos = articleService.getProdutos();
-        return ResponseEntity.ok(produtos);
-    }
+	/**
+	 * @Author Marcelo Scarton
+	 * @description Endpoint responsavel pelo envio de pedido de compra
+	 * @param ArticlesPurchase     articlesPurchaseList
+	 * @param UriComponentsBuilder uriBuilder
+	 * @return ResponseEntity<PurchaseResponse>
+	 */
+
+	@PostMapping("/purchase-request")
+	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
+			UriComponentsBuilder uriBuilder) {
+		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
+		List<Produto> articles = articleService.retornarProdutosPurchase(articlesPurchaseList);
+		BigDecimal total = articleService.retornarTotalPurchase(articles);
+		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
+		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
+	}
+
+	/**
+	 * @Author: Francisco Alves , Thomaz Ferreira
+	 * @Description Rota para listar produtos
+	 * @return ResponseEntity<List<Produto>>
+	 */
+	/*
+	 * @GetMapping("/articles")
+	 * public ResponseEntity<List<Produto>> getAll() {
+	 * produtos = articleService.getProdutos();
+	 * return ResponseEntity.ok(produtos);
+	 * }
+	 */
+
+	/**
+	 * Author: André Arroxellas
+	 *
+	 * @Description Rota para pesquisa em query de produtos
+	 * @param categoryName
+	 * @param productName
+	 * @param brandName
+	 * @param freeShipping
+	 * @param orderFilter
+	 * @param uriBuilder
+	 * @return ResponseEntity<List<ProdutoDTO>>
+	 */
+	@GetMapping("/articles")
+	// @Validated
+	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
+			@RequestParam(value = "category", required = false) String categoryName,
+			@RequestParam(value = "product", required = false) String productName,
+			@RequestParam(value = "brand", required = false) String brandName,
+			@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
+			@RequestParam(value = "order", required = false) Integer orderFilter
+	// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
+	// Depends on javax.validation.constraints
+	) {
+		List<Produto> articles = ArticlesService.trateRequestQuery(categoryName, productName, brandName, freeShipping,
+				orderFilter);
+		return ResponseEntity.accepted().body(articles);
+	}
 }
