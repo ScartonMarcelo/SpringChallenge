@@ -1,13 +1,10 @@
 package exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 public class ResourceNotFoundException extends RuntimeException{
+
+	private static final long serialVersionUID = -1013775922197850159L;
+
 	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}
