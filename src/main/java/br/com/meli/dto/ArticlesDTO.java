@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ArticlesDTO {
 
-	private List<ProdutoDTO> articles = new ArrayList<>();
+	private List<ProdutoDTO> articlesDTO = new ArrayList<>();
 
 	/**
 	 * @Author Thomaz Ferreira
@@ -29,7 +29,7 @@ public class ArticlesDTO {
 	 */
 	public static ArticlesDTO converte(Articles article){
 	  	return ArticlesDTO.builder()
-		  	.articles(ProdutoDTO.converteLista(article))
+		  	.articlesDTO(ProdutoDTO.converteLista(article))
 		  	.build();
 	}
 

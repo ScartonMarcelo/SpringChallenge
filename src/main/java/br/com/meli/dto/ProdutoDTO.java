@@ -103,7 +103,7 @@ public class ProdutoDTO {
 	 */
 	public static List<Produto> converteLista(ArticlesDTO articles) {
 		List<Produto> lista = new ArrayList<Produto>();
-		for(ProdutoDTO p : articles.getArticles()){
+		for(ProdutoDTO p : articles.getArticlesDTO()){
 			lista.add(ProdutoDTO.converte(p));
 		}
 		return lista;
