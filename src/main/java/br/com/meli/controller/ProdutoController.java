@@ -17,22 +17,9 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class ProdutoController{
 
-	List<Produto> produtos = new ArrayList<Produto>();
 
-    @Autowired
-    private ArticleRepository articleRepository;
 
-    /**
-	 * Author: Francisco Alves , Thomaz Ferreira
-	 * @Description Rota para listar produtos
-	 *
-	 */
-	@GetMapping("/articles")
-	public ResponseEntity<List<Produto>> getAll()
-	{
-		produtos = articleRepository.desserializaProdutos();
-		return ResponseEntity.ok(produtos);
-	}
+
 
 }
 
