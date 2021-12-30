@@ -10,6 +10,7 @@ import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
 import br.com.meli.service.ArticlesService;
 import br.com.meli.response.PurchaseResponse;
+import br.com.meli.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,36 +29,39 @@ public class ArticlesController {
 	@Autowired
 	private ArticlesService articleService;
 
+	@Autowired
+	private ProdutoService produtoService;
+
 	List<Produto> produtos = new ArrayList<Produto>();
 
 	/**
 	 * Author: Thomaz Ferreira
 	 *
-	 * @Description Rota para cadastrar produtos
-	 * @param ArticlesDTO          dto
-	 * @param UriComponentsBuilder uriBuilder
+	 * @param \
+	 * @param \ uriBuilder
 	 * @return ResponseEntity<ArticlesDTO>
+	 * @Description Rota para cadastrar produtos
 	 */
 
 	@PostMapping("/insert-articles-request")
 	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
-			UriComponentsBuilder uriBuilder) {
+														UriComponentsBuilder uriBuilder) {
 		articleService.salvarProdutos(articles);
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
 
 	/**
+	 * @param articlesPurchaseList
+	 * @param uriBuilder
+	 * @return ResponseEntity<PurchaseResponse>
 	 * @Author Marcelo Scarton
 	 * @description Endpoint responsavel pelo envio de pedido de compra
-	 * @param ArticlesPurchase     articlesPurchaseList
-	 * @param UriComponentsBuilder uriBuilder
-	 * @return ResponseEntity<PurchaseResponse>
 	 */
 
 	@PostMapping("/purchase-request")
 	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
-			UriComponentsBuilder uriBuilder) {
+															 UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		List<Produto> articles = articleService.retornarProdutosPurchase(articlesPurchaseList);
 		BigDecimal total = articleService.retornarTotalPurchase(articles);
@@ -68,7 +72,7 @@ public class ArticlesController {
 	/**
 	 * @Author: Francisco Alves , Thomaz Ferreira
 	 * @Description Rota para listar produtos
-	 * @return ResponseEntity<List<Produto>>
+	 * @return ResponseEntity<List < Produto>>
 	 */
 	/*
 	 * @GetMapping("/articles")
@@ -81,28 +85,29 @@ public class ArticlesController {
 	/**
 	 * Author: André Arroxellas
 	 *
-	 * @Description Rota para pesquisa em query de produtos
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @param uriBuilder
-	 * @return ResponseEntity<List<ProdutoDTO>>
+	 * @param
+	 * @return ResponseEntity<List < ProdutoDTO>>
+	 * @Description Rota para pesquisa em query de produtos
 	 */
 	@GetMapping("/articles")
 	// @Validated
 	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
-			@RequestParam(value = "category", required = false) String categoryName,
-			@RequestParam(value = "product", required = false) String productName,
-			@RequestParam(value = "brand", required = false) String brandName,
-			@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
-			@RequestParam(value = "order", required = false) Integer orderFilter
-	// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
-	// Depends on javax.validation.constraints
+		@RequestParam(value = "category", required = false) String categoryName,
+		@RequestParam(value = "product", required = false) String productName,
+		@RequestParam(value = "brand", required = false) String brandName,
+		@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
+		@RequestParam(value = "order", required = false) Integer orderFilter
+		// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
+		// Depends on javax.validation.constraints
 	) {
 		List<Produto> articles = ArticlesService.trateRequestQuery(categoryName, productName, brandName, freeShipping,
-				orderFilter);
+			orderFilter);
 		return ResponseEntity.accepted().body(articles);
 	}
+
 }
