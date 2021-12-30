@@ -42,7 +42,6 @@ public class ArticlesController {
 	 * @return ResponseEntity<ArticlesDTO>
 	 * @Description Rota para cadastrar produtos
 	 */
-
 	@PostMapping("/insert-articles-request")
 	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
 			UriComponentsBuilder uriBuilder) {
