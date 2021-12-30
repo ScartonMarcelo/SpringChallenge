@@ -22,11 +22,11 @@ public class ProdutoService {
 	 * @param  categoryName
 	 * @return List<Produto>
 	 */
-	public List<Produto> filterByCategory(String categoryName) {
-		List<Produto> products = articleRepository.desserializaProdutos().stream().filter(produto -> produto.getCategory().equalsIgnoreCase(categoryName)).collect(Collectors.toList());
-		if(products.size() == 0)
-			throw new ResourceNotFoundException();
-		else
-			return products;
-	}
+//	public List<Produto> filterByCategory(String categoryName) {
+//		List<Produto> products = articleRepository.desserializaProdutos().stream().filter(produto -> produto.getCategory().equalsIgnoreCase(categoryName)).collect(Collectors.toList());
+//		if(products.size() == 0)
+//			throw new ResourceNotFoundException();
+//		else
+//			return products;
+//	}
 }
