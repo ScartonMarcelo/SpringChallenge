@@ -32,7 +32,16 @@ public class ArticlesService {
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
-		articlesRepository.serializaProdutos(articles.getArticles());
+		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
+		List<Produto> novosProdutos = articles.getArticles();
+		for (Produto p : novosProdutos) {
+			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId())).findAny().orElse(null);
+			if (produto != null) {
+				throw new BadRequestException("O produto com o id " + p.getProductId() + " já existe.");
+			}
+		}
+		produtosExistentes.addAll(articles.getArticles());
+		articlesRepository.serializaProdutos(produtosExistentes);
 	}
 
 	/**
