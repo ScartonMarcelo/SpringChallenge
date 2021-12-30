@@ -18,10 +18,23 @@ public class ArticlesService {
 	@Autowired
 	private ArticleRepository articlesRepository;
 
+    /**
+    * @author Thomaz Ferreira
+    * @description Chama função para serializar Produtos em JSON
+    * @param Articles articles
+    * @return void
+    */   
 	public void salvarProdutos(Articles articles){
 		articlesRepository.serializaProdutos(articles.getArticles());
 	}
 
+
+    /**
+    * @author Marcelo Scarton
+    * @description Retorna lista de Produtos solicitados para compra
+    * @param ArticlesPurchase articlesPurchaseList
+    * @return List<Produto>
+    */  
 	public List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
 		List<Produto> purchaseList = new ArrayList<>();
@@ -31,11 +44,28 @@ public class ArticlesService {
 		return purchaseList;
 	}
 
+    
+    /**
+    * @author Marcelo Scarton
+    * @description Retorna valor total da lista de Produtos solicitados para compra
+    * @param List<Produto> articles
+    * @return BigDecimal
+    */ 
 	public BigDecimal retornarTotalPurchase(List<Produto> articles) {
 		BigDecimal total = new BigDecimal("0");
 		for (Produto p : articles) {
 			total = total.add(p.getPrice().multiply(BigDecimal.valueOf(p.getQuantity())));
 		}
 		return total;
+    }
+    
+    
+    /**
+    * @author Francisco Alves
+    * @description Retorna todos os produtos cadastrados
+    * @return List<Produto>
+    */
+	public List<Produto> getProdutos(){
+		return articlesRepository.desserializaProdutos();
 	}
 }
