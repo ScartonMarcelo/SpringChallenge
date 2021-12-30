@@ -5,6 +5,7 @@ import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
+import br.com.meli.util.ResponseEntityErrorsUtils;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +26,10 @@ public class ArticlesService {
 
 	@Autowired
 	private ArticleRepository articlesRepository;
+
+	@Autowired
+	private ResponseEntityErrorsUtils responseEntityErrorsUtils;
+
 
 	/**
 	 * @param Articles articles
@@ -132,5 +138,13 @@ public class ArticlesService {
 		}
 
 		return listaProdutos;
+	}
+
+
+	/**
+	 *
+	 */
+	public ResponseEntity<?> validaPayload(Articles articles){
+		return null;
 	}
 }
