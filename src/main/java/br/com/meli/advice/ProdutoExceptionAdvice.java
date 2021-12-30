@@ -12,12 +12,7 @@ import java.time.LocalDate;
 public class ProdutoExceptionAdvice {
 
 	@ExceptionHandler(value = ResourceNotFoundException.class)
-	public ResponseEntity<?> handlePersistencia(ResourceNotFoundException resourse) {
-		ResourceNotFoundException msg = resourse.builder()
-			.timeStamp(LocalDate.now())
-			.title("Not Found")
-			.httpCode(HttpStatus.NOT_FOUND.value())
-			.message("O parametro retornou nulo na pesquisa").build();
-		return new ResponseEntity<>(msg.getMessage(),HttpStatus.NOT_FOUND);
+	public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException msg) {
+		return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg.getMessage());
 	}
 }
