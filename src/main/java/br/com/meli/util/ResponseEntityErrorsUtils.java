@@ -8,13 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Component
 public class ResponseEntityErrorsUtils {
 
 	private Map<String, String> objectResponse = new HashMap<>();
 
 	/**
 	 * @author Thomaz Ferreira
+	 * @description Retorna ResponseEntity correspondente ao statusCode de erro informado
 	 * @param exceptionMsg
 	 * @param statusCode
 	 * @return ResponseEntity

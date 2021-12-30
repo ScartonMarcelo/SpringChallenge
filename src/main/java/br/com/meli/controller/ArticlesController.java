@@ -46,7 +46,7 @@ public class ArticlesController {
 	@PostMapping("/insert-articles-request")
 	private ResponseEntity<?> cadastraProduto(@RequestBody Articles articles,
 			UriComponentsBuilder uriBuilder) {
-		return articleService.validaPayload(articles);
+		return articleService.cadastraProdutos(articles);
 		//articleService.salvarProdutos(articles);
 		//URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		//return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));

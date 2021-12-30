@@ -1,18 +1,26 @@
 package br.com.meli.advice;
 
+import br.com.meli.util.ResponseEntityErrorsUtils;
 import exception.BadRequestException;
+import exception.ResponseEntityException;
+import org.springframework.beans.PropertyAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDate;
-
 @ControllerAdvice
-public class ProdutoExceptionAdvice {
+public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
+
 
 	@ExceptionHandler(value = BadRequestException.class)
 	public ResponseEntity<?> handlePersistencia(BadRequestException resourse) {
 		String bodyOfResponse = resourse.getMessage();
-		return ResponseEntity.badRequest().body(bodyOfResponse);
+		return super.responseEntityFactory(bodyOfResponse, "404");
+	}
+
+	@ExceptionHandler(value = ResponseEntityException.class)
+	public ResponseEntity<?> factoryExceptions(ResponseEntityException e) {
+		return super.responseEntityFactory(e.getMessage(),e.getStatusCode());
 	}
 }

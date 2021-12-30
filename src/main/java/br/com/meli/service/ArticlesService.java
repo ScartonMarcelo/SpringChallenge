@@ -14,6 +14,7 @@ import br.com.meli.util.OrdenadorProdutos.Shipping;
 import java.util.List;
 
 import exception.BadRequestException;
+import exception.ResponseEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class ArticlesService {
 	/**
 	 * @param Articles articles
 	 * @return void
-	 * @author Thomaz Ferreira
+	 * @author
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
@@ -153,7 +154,7 @@ public class ArticlesService {
 	/**
 	 *
 	 */
-	public ResponseEntity<?> validaPayload(Articles articles){
-		return null;
+	public ResponseEntity<?> cadastraProdutos(Articles articles){
+		throw new ResponseEntityException("Teste","404");
 	}
 }
