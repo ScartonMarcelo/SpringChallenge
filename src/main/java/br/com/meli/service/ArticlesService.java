@@ -28,14 +28,11 @@ public class ArticlesService {
 	@Autowired
 	private ArticleRepository articlesRepository;
 
-	@Autowired
-	private ResponseEntityErrorsUtils responseEntityErrorsUtils;
-
 
 	/**
-	 * @param Articles articles
+	 * @param articles
 	 * @return void
-	 * @author
+	 * @author ?????
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
@@ -52,8 +49,8 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @param ArticlesPurchase articlesPurchaseList
-	 * @return List<Produto>
+	 * @param articlesPurchaseList
+	 * @return List
 	 * @author Marcelo Scarton
 	 * @description Retorna lista de Produtos solicitados para compra
 	 */
@@ -76,7 +73,7 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @param List<Produto> articles
+	 * @param articles
 	 * @return BigDecimal
 	 * @author Marcelo Scarton
 	 * @description Retorna valor total da lista de Produtos solicitados para compra
@@ -90,7 +87,7 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @return List<Produto>
+	 * @return List
 	 * @author Francisco Alves
 	 * @description Retorna todos os produtos cadastrados
 	 */
@@ -106,7 +103,7 @@ public class ArticlesService {
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @return List<Produto>
+	 * @return List
 	 * @Description Condicionais para filtros & ordenadores
 	 */
 	public static List<Produto> trateRequestQuery(String categoryName, String productName,
