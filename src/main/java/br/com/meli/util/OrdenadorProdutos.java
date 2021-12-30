@@ -37,19 +37,19 @@ public class OrdenadorProdutos {
 
 	List<Produto> filtraCategoryName(List<Produto> listaProdutos, String categoryName) {
 		return listaProdutos.stream()
-				.filter(p -> p.getCategory().equals(categoryName))
+				.filter(p -> p.getCategory().equalsIgnoreCase(categoryName))
 				.collect(Collectors.toList());
 	}
 
 	List<Produto> filtraProductName(List<Produto> listaProdutos, String productName) {
 		return listaProdutos.stream()
-				.filter(p -> p.getName().equals(productName))
+				.filter(p -> p.getName().equalsIgnoreCase(productName))
 				.collect(Collectors.toList());
 	}
 
 	List<Produto> filtraBrandName(List<Produto> listaProdutos, String brandName) {
 		return listaProdutos.stream()
-				.filter(p -> p.getBrand().equals(brandName))
+				.filter(p -> p.getBrand().equalsIgnoreCase(brandName))
 				.collect(Collectors.toList());
 	}
 
