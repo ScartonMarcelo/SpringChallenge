@@ -1,17 +1,13 @@
 package br.com.meli.dto;
 
 import br.com.meli.entity.Articles;
-import br.com.meli.entity.Produto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -27,12 +23,11 @@ public class ArticlesDTO {
 	 * @param Articles article
 	 * @return ArticlesDTO
 	 */
-	public static ArticlesDTO converte(Articles article){
-	  	return ArticlesDTO.builder()
-		  	.articlesDTO(ProdutoDTO.converteLista(article))
-		  	.build();
+	public static ArticlesDTO converte(Articles article) {
+		return ArticlesDTO.builder()
+				.articlesDTO(ProdutoDTO.converteLista(article))
+				.build();
 	}
-
 
 	/**
 	 * @author Thomaz Ferreira
@@ -40,9 +35,9 @@ public class ArticlesDTO {
 	 * @param Articles article
 	 * @return ArticlesDTO
 	 */
-  	public static Articles converte(ArticlesDTO dto){
-	  	return Articles.builder()
-		  	.articles(ProdutoDTO.converteLista(dto))
-		  	.build();
+	public static Articles converte(ArticlesDTO dto) {
+		return Articles.builder()
+				.articles(ProdutoDTO.converteLista(dto))
+				.build();
 	}
 }

@@ -35,7 +35,8 @@ public class ArticlesService {
 		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
 		List<Produto> novosProdutos = articles.getArticles();
 		for (Produto p : novosProdutos) {
-			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId())).findAny().orElse(null);
+			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
+					.findAny().orElse(null);
 			if (produto != null) {
 				throw new BadRequestException("O produto com o id " + p.getProductId() + " já existe.");
 			}
@@ -54,14 +55,15 @@ public class ArticlesService {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
 		List<Produto> purchaseList = new ArrayList<>();
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
-			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny().orElse(null);
+			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
+					.orElse(null);
 			if (produto == null) {
 				throw new BadRequestException("O produto com o id " + a.getProductId() + " não existe.");
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new BadRequestException(
-					"Não há estoque suficiente para o produto " + a.getName() + ", " +
-						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).");
+						"Não há estoque suficiente para o produto " + a.getName() + ", " +
+								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).");
 			}
 			purchaseList.add(produto);
 		}
@@ -102,18 +104,17 @@ public class ArticlesService {
 	 * @return List<Produto>
 	 * @Description Condicionais para filtros & ordenadores
 	 */
-	public static List<Produto> trateRequestQuery(String categoryName, String productName,
-												  String brandName, Boolean freeShipping, Integer orderFilter) {
+	public List<Produto> trateRequestQuery(String categoryName, String productName,
+			String brandName, Boolean freeShipping, Integer orderFilter) {
 
-		ArticleRepository articleRepository = new ArticleRepository();
-		List<Produto> listaProdutos = articleRepository.desserializaProdutos();
+		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
 
 		OrdenadorProdutos ordenadorProdutos = new OrdenadorProdutos();
 
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
 				listaProdutos = ordenadorProdutos.odernarProdutos(
-					listaProdutos, null, Ordenador.values()[orderFilter]);
+						listaProdutos, null, Ordenador.values()[orderFilter]);
 			} else {
 				throw new IllegalArgumentException("Order não pode ser: " + orderFilter);
 			}
@@ -121,23 +122,23 @@ public class ArticlesService {
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
 				listaProdutos = ordenadorProdutos.filtrarShipping(
-					listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
+						listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
 				listaProdutos = ordenadorProdutos.filtrarShipping(
-					listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
+						listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
 			}
 		}
 		if (categoryName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
+					listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
+					listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
+					listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
 		}
 
 		return listaProdutos;

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.meli.entity.Produto;
 
@@ -21,7 +20,8 @@ import br.com.meli.entity.Produto;
 public class ProdutoDTO {
 
 	/**
-	 * @Author Thomaz Ferreira, Thiago Henrique, Francisco Alves, Marcelo Scarton, André Arroxellas
+	 * @Author Thomaz Ferreira, Thiago Henrique, Francisco Alves, Marcelo Scarton,
+	 *         André Arroxellas
 	 * @Description Model Produto DTO
 	 */
 
@@ -46,19 +46,18 @@ public class ProdutoDTO {
 	 * @return Produto
 	 */
 
-	public static Produto converte(ProdutoDTO dto){
+	public static Produto converte(ProdutoDTO dto) {
 		return Produto.builder()
-			.productId(dto.getProductId())
-			.name(dto.getName())
-			.category(dto.getCategory())
-			.brand(dto.getBrand())
-			.price(dto.getPrice())
-			.quantity(dto.getQuantity())
-			.freeShipping(dto.getFreeShipping())
-			.prestige(dto.getPrestige())
-			.build();
+				.productId(dto.getProductId())
+				.name(dto.getName())
+				.category(dto.getCategory())
+				.brand(dto.getBrand())
+				.price(dto.getPrice())
+				.quantity(dto.getQuantity())
+				.freeShipping(dto.getFreeShipping())
+				.prestige(dto.getPrestige())
+				.build();
 	}
-
 
 	/**
 	 * @Author Thomaz Ferreira
@@ -66,44 +65,44 @@ public class ProdutoDTO {
 	 * @param Produto p
 	 * @return ProdutoDTO
 	 */
-	public static ProdutoDTO converte(Produto p){
+	public static ProdutoDTO converte(Produto p) {
 		return ProdutoDTO.builder()
-			.productId(p.getProductId())
-			.name(p.getName())
-			.category(p.getCategory())
-			.brand(p.getBrand())
-			.price(p.getPrice())
-			.quantity(p.getQuantity())
-			.freeShipping(p.getFreeShipping())
-			.prestige(p.getPrestige())
-			.build();
+				.productId(p.getProductId())
+				.name(p.getName())
+				.category(p.getCategory())
+				.brand(p.getBrand())
+				.price(p.getPrice())
+				.quantity(p.getQuantity())
+				.freeShipping(p.getFreeShipping())
+				.prestige(p.getPrestige())
+				.build();
 	}
-
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @Description Converte lista de objetos Produtos em uma lista de objetos ProdutoDTO
+	 * @Description Converte lista de objetos Produtos em uma lista de objetos
+	 *              ProdutoDTO
 	 * @param Articles articles
 	 * @return List lista
 	 */
 	public static List<ProdutoDTO> converteLista(Articles articles) {
 		List<ProdutoDTO> lista = new ArrayList<ProdutoDTO>();
-		for(Produto p : articles.getArticles()){
+		for (Produto p : articles.getArticles()) {
 			lista.add(ProdutoDTO.converte(p));
 		}
 		return lista;
 	}
 
-
 	/**
 	 * @author Thomaz Ferreira
-	 * @Description Converte lista de objetos ProdutoDTO em uma lista de objetos Produto
+	 * @Description Converte lista de objetos ProdutoDTO em uma lista de objetos
+	 *              Produto
 	 * @param Articles articles
 	 * @return List lista
 	 */
 	public static List<Produto> converteLista(ArticlesDTO articles) {
 		List<Produto> lista = new ArrayList<Produto>();
-		for(ProdutoDTO p : articles.getArticlesDTO()){
+		for (ProdutoDTO p : articles.getArticlesDTO()) {
 			lista.add(ProdutoDTO.converte(p));
 		}
 		return lista;
