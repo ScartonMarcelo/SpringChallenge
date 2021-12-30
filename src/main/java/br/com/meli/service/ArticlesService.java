@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ArticlesService {
@@ -16,5 +17,9 @@ public class ArticlesService {
 
 	public void salvarProdutos(Articles articles){
 		articlesRepository.serializaProdutos(articles.getArticles());
+	}
+
+	public List<Produto> getProdutos(){
+		return articlesRepository.desserializaProdutos();
 	}
 }
