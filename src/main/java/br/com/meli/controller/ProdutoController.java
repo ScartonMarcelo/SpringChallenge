@@ -22,7 +22,11 @@ public class ProdutoController{
     @Autowired
     private ArticleRepository articleRepository;
 
-
+    /**
+	 * Author: Francisco Alves , Thomaz Ferreira
+	 * @Description Rota para listar produtos
+	 *
+	 */
 	@GetMapping("/articles")
 	public ResponseEntity<List<Produto>> getAll()
 	{
