@@ -1,9 +1,6 @@
 package br.com.meli.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,11 +9,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Produto {
-
-	/**
-	 * Author Thiago Campos
-	 * Return ProdutoDTO
-	 */
 	private Long productId;
 	private String name;
 	private String category;

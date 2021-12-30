@@ -11,11 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.meli.entity.Produto;
+import br.com.meli.repository.ArticleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-public class ProdutoController {
+public class ProdutoController{
 
 	@Autowired
 	private ProdutoService produtoService;
@@ -25,9 +37,13 @@ public class ProdutoController {
 	 * @return ResponseEntitu<< List>ProdutoDTO>>
 	 * @author thiago campos
 	 */
-	@GetMapping("/category")
-	public ResponseEntity<List<ProdutoDTO>> getListByCategory(@RequestParam String categoryName) {
-		List<Produto> filteredProducts = ProdutoService.filterByCategory(categoryName);
-		return ResponseEntity.ok(ProdutoDTO.convert(filteredProducts));
+	@GetMapping("/article")
+	public ResponseEntity<List<Produto>> getListByCategory(@RequestParam String category) {
+		List<Produto> filteredProducts = produtoService.filterByCategory(category);
+		return ResponseEntity.ok(filteredProducts);
 	}
 }
+
+
+
+

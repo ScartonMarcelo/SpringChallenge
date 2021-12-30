@@ -1,6 +1,7 @@
 package br.com.meli.service;
 
 import br.com.meli.entity.Produto;
+import br.com.meli.repository.ArticleRepository;
 import br.com.meli.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class ProdutoService {
 
 	@Autowired
-	private ProdutoRepository produtoRepository;
+	private ArticleRepository articleRepository;
 
 	/**
 	 * @Author Thiago Campos
@@ -22,8 +23,8 @@ public class ProdutoService {
 	 * @param String categoryName
 	 * @return List<Produto>
 	 */
-	public static List<Produto> filterByCategory(String categoryName) {
-		return ProdutoRepository.getAll()
+	public List<Produto> filterByCategory(String categoryName) {
+		return articleRepository.desserializaProdutos()
 			.stream().filter(produto -> produto.getCategory().equalsIgnoreCase(categoryName))
 			.collect(Collectors.toList());
 	}

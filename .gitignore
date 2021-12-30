@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### MacOS ###
+.DS_Store
+
+
+## Produto ##
+produtos.json
+carrinho.json
