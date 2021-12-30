@@ -8,7 +8,6 @@ import br.com.meli.service.ArticlesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,22 +43,31 @@ public class ArticlesController {
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
 
+	/**
+	 * Author: André Arroxellas
+	 *
+	 * @Description Rota para pesquisa em query de produtos
+	 * @param categoryName
+	 * @param productName
+	 * @param brandName
+	 * @param freeShipping
+	 * @param orderFilter
+	 * @param uriBuilder
+	 * @return ResponseEntity<List<ProdutoDTO>>
+	 */
 	@GetMapping("/articles")
 	// @Validated
-	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(
+	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
 			@RequestParam(value = "category", required = false) String categoryName,
 			@RequestParam(value = "product", required = false) String productName,
 			@RequestParam(value = "brand", required = false) String brandName,
 			@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
-			@RequestParam(value = "order", required = false) Integer orderFilter,
-			// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
-			// Depends on javax.validation.constraints
-			UriComponentsBuilder uriBuilder) {
-		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		List<Produto> articles = ArticlesService.trateRequest(categoryName, productName, brandName, freeShipping,
+			@RequestParam(value = "order", required = false) Integer orderFilter
+	// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
+	// Depends on javax.validation.constraints
+	) {
+		List<Produto> articles = ArticlesService.trateRequestQuery(categoryName, productName, brandName, freeShipping,
 				orderFilter);
-		return ResponseEntity.created(uri).body(articles.stream()
-				.map(ProdutoDTO::converte)
-				.collect(Collectors.toList()));
+		return ResponseEntity.accepted().body(articles);
 	}
 }
