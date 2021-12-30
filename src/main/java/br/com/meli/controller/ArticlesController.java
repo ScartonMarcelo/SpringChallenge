@@ -45,7 +45,7 @@ public class ArticlesController {
 
 	@PostMapping("/insert-articles-request")
 	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
-														UriComponentsBuilder uriBuilder) {
+			UriComponentsBuilder uriBuilder) {
 		articleService.salvarProdutos(articles);
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
@@ -60,7 +60,8 @@ public class ArticlesController {
 	 */
 
 	@PostMapping("/purchase-request")
-	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList, UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
+			UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		List<Produto> articles = articleService.retornarProdutosPurchase(articlesPurchaseList);
 		BigDecimal total = articleService.retornarTotalPurchase(articles);
@@ -96,17 +97,17 @@ public class ArticlesController {
 	@GetMapping("/articles")
 	// @Validated
 	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
-		@RequestParam(value = "category", required = false) String categoryName,
-		@RequestParam(value = "product", required = false) String productName,
-		@RequestParam(value = "brand", required = false) String brandName,
-		@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
-		@RequestParam(value = "order", required = false) Integer orderFilter
-		// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
-		// Depends on javax.validation.constraints
+			@RequestParam(value = "category", required = false) String categoryName,
+			@RequestParam(value = "product", required = false) String productName,
+			@RequestParam(value = "brand", required = false) String brandName,
+			@RequestParam(value = "freeShipping", required = false) Boolean freeShipping,
+			@RequestParam(value = "order", required = false) Integer orderFilter
+	// @RequestParam(value = "order", required = false) @Max(3) Integer orderFilter,
+	// Depends on javax.validation.constraints
 	) {
-		List<Produto> articles = ArticlesService.trateRequestQuery(categoryName, productName, brandName, freeShipping,
-			orderFilter);
-		return ResponseEntity.accepted().body(articles);
+		List<Produto> articles = ArticlesService.trateRequestQuery(
+				categoryName, productName, brandName, freeShipping, orderFilter);
+		return ResponseEntity.ok().body(articles);
 	}
 
 }
