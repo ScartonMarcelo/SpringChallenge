@@ -60,8 +60,7 @@ public class ArticlesController {
 	 */
 
 	@PostMapping("/purchase-request")
-	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
-															 UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList, UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		List<Produto> articles = articleService.retornarProdutosPurchase(articlesPurchaseList);
 		BigDecimal total = articleService.retornarTotalPurchase(articles);
