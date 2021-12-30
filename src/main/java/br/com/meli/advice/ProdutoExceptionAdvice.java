@@ -13,11 +13,7 @@ public class ProdutoExceptionAdvice {
 
 	@ExceptionHandler(value = ResourceNotFoundException.class)
 	public ResponseEntity<?> handlePersistencia(ResourceNotFoundException resourse) {
-		ResourceNotFoundException msg = resourse.builder()
-			.timeStamp(LocalDate.now())
-			.title("Not Found")
-			.httpCode(HttpStatus.NOT_FOUND.value())
-			.message("O parametro retornou nulo na pesquisa").build();
-		return new ResponseEntity<>(msg.getMessage(),HttpStatus.NOT_FOUND);
+		String bodyOfResponse = resourse.getMessage();
+		return ResponseEntity.badRequest().body(bodyOfResponse);
 	}
 }
