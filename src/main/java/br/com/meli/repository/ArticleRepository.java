@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class ArticleRepository {
 
-  	private final String JSON_FILE_NAME = "produtos.json";
+	private final String JSON_FILE_NAME = "produtos.json";
 
 	// Serializa produtos em JSON
 	public void serializaProdutos(List<Produto> produtos) {
@@ -32,9 +32,12 @@ public class ArticleRepository {
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		List<Produto> listaProdutos = new ArrayList<Produto>();
 		try {
-			listaProdutos = mapper.readValue(new File(JSON_FILE_NAME),
+			File file = new File(JSON_FILE_NAME);
+			if (file.exists()) {
+				listaProdutos = mapper.readValue(file,
 					mapper.getTypeFactory().constructCollectionType(
-							List.class, Produto.class));
+						List.class, Produto.class));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
