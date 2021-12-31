@@ -4,6 +4,7 @@ import br.com.meli.util.ResponseEntityErrorsUtils;
 import exception.BadRequestException;
 import exception.ResponseEntityException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,4 +28,17 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 	public ResponseEntity<?> factoryExceptions(ResponseEntityException e) {
 		return super.responseEntityFactory(e.getMessage(),e.getStatusCode());
 	}
+
+
+	/**
+	 * @author Thomaz Ferreira
+	 * @description Trata exceptions de HttpMessageNotReadableException e retorna payload no modelo definido em responseEntityFactory
+	 * @param e
+	 * @return ResponseEntity
+	 */
+	@ExceptionHandler(value = HttpMessageNotReadableException.class)
+	public ResponseEntity<?> JsonExceptions(HttpMessageNotReadableException e) {
+		return super.responseEntityFactory("JSON inválido", "400");
+	}
+
 }
