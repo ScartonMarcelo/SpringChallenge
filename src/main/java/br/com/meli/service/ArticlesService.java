@@ -8,7 +8,6 @@ import br.com.meli.repository.ArticleRepository;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
-import br.com.meli.util.OrdenadorProdutos.Shipping;
 
 import java.util.List;
 
@@ -101,6 +100,8 @@ public class ArticlesService {
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
+	 * @see OrdenadorProdutos
+	 *
 	 * @return List<Produto>
 	 * @Description Condicionais para filtros & ordenadores
 	 */
@@ -111,34 +112,39 @@ public class ArticlesService {
 
 		OrdenadorProdutos ordenadorProdutos = new OrdenadorProdutos();
 
+		/*
+		 * OrdenadorValues()
+		 * [ORDENA_ALFABETICAMENTE_CRESCENTE, ORDENA_ALFABETICAMENTE_DECRESCENTE,
+		 * ORDENA_MAIOR_PRECO, ORDENA_MENOR_PRECO]
+		 */
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
 				listaProdutos = ordenadorProdutos.odernarProdutos(
-						listaProdutos, null, Ordenador.values()[orderFilter]);
+						listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
 				throw new IllegalArgumentException("Order não pode ser: " + orderFilter);
 			}
 		}
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
-				listaProdutos = ordenadorProdutos.filtrarShipping(
-						listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
+				listaProdutos = ordenadorProdutos.filtrarProdutos(
+						listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
-				listaProdutos = ordenadorProdutos.filtrarShipping(
-						listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
+				listaProdutos = ordenadorProdutos.filtrarProdutos(
+						listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
 			}
 		}
 		if (categoryName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
+					listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
+					listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
+					listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
 		}
 
 		return listaProdutos;

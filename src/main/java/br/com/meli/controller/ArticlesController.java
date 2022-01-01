@@ -72,27 +72,13 @@ public class ArticlesController {
 	}
 
 	/**
-	 * @Author: Francisco Alves , Thomaz Ferreira
-	 * @Description Rota para listar produtos
-	 * @return ResponseEntity<List < Produto>>
-	 */
-	/*
-	 * @GetMapping("/articles")
-	 * public ResponseEntity<List<Produto>> getAll() {
-	 * produtos = articleService.getProdutos();
-	 * return ResponseEntity.ok(produtos);
-	 * }
-	 */
-
-	/**
-	 * Author: André Arroxellas
+	 * Author: André Arroxellas , Francisco Alves , Thomaz Ferreira
 	 *
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @param
 	 * @return ResponseEntity<List < ProdutoDTO>>
 	 * @Description Rota para pesquisa em query de produtos
 	 */

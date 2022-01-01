@@ -2,6 +2,7 @@ package br.com.meli.util;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import br.com.meli.entity.Produto;
@@ -11,57 +12,15 @@ import br.com.meli.entity.Produto;
  * @description métodos de ordenação e filtro
  */
 public class OrdenadorProdutos {
-	List<Produto> ordenaAlfabeticamenteCrescente(List<Produto> listaProdutos) {
+	List<Produto> ordenaPorAtributo(List<Produto> listaProdutos, Comparator<Produto> comparator) {
 		return listaProdutos.stream()
-				.sorted(Comparator.comparing(Produto::getName))
+				.sorted(comparator)
 				.collect(Collectors.toList());
 	}
 
-	List<Produto> ordenaAlfabeticamenteDecrescente(List<Produto> listaProdutos) {
+	List<Produto> filtraPorAtributo(List<Produto> listaProdutos, Predicate<Produto> selector) {
 		return listaProdutos.stream()
-				.sorted(Comparator.comparing(Produto::getName).reversed())
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> ordenaPrecoMaior(List<Produto> listaProdutos) {
-		return listaProdutos.stream()
-				.sorted(Comparator.comparing(Produto::getPrice))
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> ordenaPrecoMenor(List<Produto> listaProdutos) {
-		return listaProdutos.stream()
-				.sorted(Comparator.comparing(Produto::getPrice).reversed())
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> filtraCategoryName(List<Produto> listaProdutos, String categoryName) {
-		return listaProdutos.stream()
-				.filter(p -> p.getCategory().equalsIgnoreCase(categoryName))
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> filtraProductName(List<Produto> listaProdutos, String productName) {
-		return listaProdutos.stream()
-				.filter(p -> p.getName().equalsIgnoreCase(productName))
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> filtraBrandName(List<Produto> listaProdutos, String brandName) {
-		return listaProdutos.stream()
-				.filter(p -> p.getBrand().equalsIgnoreCase(brandName))
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> filtraFreeShipping(List<Produto> listaProdutos) {
-		return listaProdutos.stream()
-				.filter(p -> p.getFreeShipping())
-				.collect(Collectors.toList());
-	}
-
-	List<Produto> filtraNonFreeShipping(List<Produto> listaProdutos) {
-		return listaProdutos.stream()
-				.filter(p -> !p.getFreeShipping())
+				.filter(selector)
 				.collect(Collectors.toList());
 	}
 
@@ -85,7 +44,9 @@ public class OrdenadorProdutos {
 	public enum Filtro {
 		FILTRA_CATEGORY_NAME(0),
 		FILTRA_PRODUCT_NAME(1),
-		FILTRA_BRAND_NAME(2);
+		FILTRA_BRAND_NAME(2),
+		FILTRA_FREE_SHIPPING(3),
+		FILTRA_NON_FREE_SHIPPING(4);
 
 		private int valor;
 
@@ -98,60 +59,44 @@ public class OrdenadorProdutos {
 		}
 	}
 
-	public enum Shipping {
-		FILTRA_FREE_SHIPPING(0),
-		FILTRA_NON_FREE_SHIPPING(1);
-
-		private int valor;
-
-		private Shipping(int valor) {
-			this.valor = valor;
-		}
-
-		public int getValor() {
-			return this.valor;
-		}
-	}
-
-	public List<Produto> odernarProdutos(List<Produto> listaProdutos, String nameCategoryOrBrand,
-			Ordenador ordenador) {
+	public List<Produto> odernarProdutos(List<Produto> listaProdutos, Ordenador ordenador) {
 		switch (ordenador) {
 			case ORDENA_ALFABETICAMENTE_CRESCENTE:
-				return this.ordenaAlfabeticamenteCrescente(listaProdutos);
+				return this.ordenaPorAtributo(listaProdutos,
+						Comparator.comparing(Produto::getName));
 			case ORDENA_ALFABETICAMENTE_DECRESCENTE:
-				return this.ordenaAlfabeticamenteDecrescente(listaProdutos);
+				return this.ordenaPorAtributo(listaProdutos,
+						Comparator.comparing(Produto::getName).reversed());
 			case ORDENA_MAIOR_PRECO:
-				return this.ordenaPrecoMaior(listaProdutos);
+				return this.ordenaPorAtributo(listaProdutos,
+						Comparator.comparing(Produto::getPrice));
 			case ORDENA_MENOR_PRECO:
-				return this.ordenaPrecoMenor(listaProdutos);
+				return this.ordenaPorAtributo(listaProdutos,
+						Comparator.comparing(Produto::getPrice).reversed());
 			default:
 				throw new IllegalArgumentException();
 		}
 	}
 
-	public List<Produto> filtrarProdutos(List<Produto> listaProdutos, String nameCategoryOrBrand,
+	public List<Produto> filtrarProdutos(List<Produto> listaProdutos, String atributoString,
 			Filtro filtro) {
 		switch (filtro) {
 			case FILTRA_CATEGORY_NAME:
-				return this.filtraCategoryName(listaProdutos, nameCategoryOrBrand);
+				return this.filtraPorAtributo(listaProdutos,
+						p -> p.getCategory().equalsIgnoreCase(atributoString));
 			case FILTRA_PRODUCT_NAME:
-				return this.filtraProductName(listaProdutos, nameCategoryOrBrand);
+				return this.filtraPorAtributo(listaProdutos,
+						p -> p.getName().equalsIgnoreCase(atributoString));
 			case FILTRA_BRAND_NAME:
-				return this.filtraBrandName(listaProdutos, nameCategoryOrBrand);
+				return this.filtraPorAtributo(listaProdutos,
+						p -> p.getBrand().equalsIgnoreCase(atributoString));
+			case FILTRA_FREE_SHIPPING:
+				return this.filtraPorAtributo(listaProdutos, p -> p.getFreeShipping());
+			case FILTRA_NON_FREE_SHIPPING:
+				return this.filtraPorAtributo(listaProdutos, p -> !p.getFreeShipping());
 			default:
 				throw new IllegalArgumentException();
 		}
 	}
 
-	public List<Produto> filtrarShipping(List<Produto> listaProdutos, String nameCategoryOrBrand,
-			Shipping shipping) {
-		switch (shipping) {
-			case FILTRA_FREE_SHIPPING:
-				return this.filtraFreeShipping(listaProdutos);
-			case FILTRA_NON_FREE_SHIPPING:
-				return this.filtraNonFreeShipping(listaProdutos);
-			default:
-				throw new IllegalArgumentException();
-		}
-	}
 }
