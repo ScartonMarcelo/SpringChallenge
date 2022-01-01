@@ -11,6 +11,7 @@ import br.com.meli.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,19 +39,16 @@ public class ArticlesController {
 
 	/**
 	 * Author: Thomaz Ferreira
-	 *
-	 * @param \
-	 * @param \ uriBuilder
-	 * @return ResponseEntity<ArticlesDTO>
 	 * @Description Rota para cadastrar produtos
+	 * @param articles
+	 * @param uriBuilder
+	 * @return ArticlesDTO
 	 */
 
 	@PostMapping("/insert-articles-request")
-	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
-			UriComponentsBuilder uriBuilder) {
-		articlesService.salvarProdutos(articles);
+	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+		return articlesService.cadastraProdutos(articles, uri);
 	}
 
 	/**
