@@ -12,7 +12,7 @@ import br.com.meli.util.OrdenadorProdutos.Shipping;
 
 import java.util.List;
 
-import exception.ResourceNotFoundException;
+import exception.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,16 @@ public class ArticlesService {
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
-		articlesRepository.serializaProdutos(articles.getArticles());
+		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
+		List<Produto> novosProdutos = articles.getArticles();
+		for (Produto p : novosProdutos) {
+			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId())).findAny().orElse(null);
+			if (produto != null) {
+				throw new BadRequestException("O produto com o id " + p.getProductId() + " já existe.");
+			}
+		}
+		produtosExistentes.addAll(articles.getArticles());
+		articlesRepository.serializaProdutos(produtosExistentes);
 	}
 
 	/**
@@ -47,10 +56,10 @@ public class ArticlesService {
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny().orElse(null);
 			if (produto == null) {
-				throw new ResourceNotFoundException("O produto com o id " + a.getProductId() + " não existe.");
+				throw new BadRequestException("O produto com o id " + a.getProductId() + " não existe.");
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
-				throw new ResourceNotFoundException(
+				throw new BadRequestException(
 					"Não há estoque suficiente para o produto " + a.getName() + ", " +
 						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).");
 			}
