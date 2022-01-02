@@ -164,7 +164,7 @@ public class ArticlesService {
 			throw new ResponseEntityException("Não existe nenhum produto na lista", "400");
 		}
 		validaJsonCadastroProdutos(articles);
-		this.salvarProdutos(articles);
+		articlesRepository.serializaProdutos(articles.getArticles());
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
 
