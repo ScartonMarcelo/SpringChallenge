@@ -144,20 +144,14 @@ public class ArticlesService {
 		if (categoryName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
-		} else {
-			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 		if (productName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
-		} else {
-			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 		if (brandName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
-		} else {
-			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 
 		return listaProdutos;

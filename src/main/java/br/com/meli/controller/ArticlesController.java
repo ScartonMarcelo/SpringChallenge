@@ -1,6 +1,7 @@
 package br.com.meli.controller;
 
 import br.com.meli.dto.ArticlesDTO;
+import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -82,7 +84,7 @@ public class ArticlesController {
 	 * @Description Rota para pesquisa em query de produtos
 	 */
 	@GetMapping("/articles")
-	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
+	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(
 			@RequestParam(value = "category", required = false) String categoryName,
 			@RequestParam(value = "product", required = false) String productName,
 			@RequestParam(value = "brand", required = false) String brandName,
@@ -90,6 +92,8 @@ public class ArticlesController {
 			@RequestParam(value = "order", required = false) Integer orderFilter) {
 		List<Produto> articles = articlesService.trateRequestQuery(
 				categoryName, productName, brandName, freeShipping, orderFilter);
-		return ResponseEntity.ok().body(articles);
+		return ResponseEntity.ok().body(articles.stream()
+				.map(ProdutoDTO::converte)
+				.collect(Collectors.toList()));
 	}
 }
