@@ -26,7 +26,9 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 	 */
 	@ExceptionHandler(value = ResponseEntityException.class)
 	public ResponseEntity<?> factoryExceptions(ResponseEntityException e) {
-		return super.responseEntityFactory(e.getMessage(),e.getStatusCode());
+		if(e.getException() == null)
+			return super.responseEntityFactory(e.getMessage(),e.getStatusCode());
+		return super.responseEntityFactory(e.getMessage(), e.getException(), e.getStatusCode());
 	}
 
 
@@ -40,5 +42,4 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 	public ResponseEntity<?> JsonExceptions(HttpMessageNotReadableException e) {
 		return super.responseEntityFactory("JSON inválido", "400");
 	}
-
 }
