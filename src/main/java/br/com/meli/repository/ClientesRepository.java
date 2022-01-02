@@ -11,7 +11,6 @@ public class ClientesRepository {
 	private List<Cliente> clientes = new ArrayList<>();
 
 	public void save(Cliente cliente) {
-		System.out.println("\n\n ================ " + cliente + " ================\n\n");
 		clientes.add(cliente);
 	}
 

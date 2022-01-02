@@ -21,12 +21,11 @@ public class ClienteService {
 	// Change Email
 	// Change Status
 	public ClienteDTO cadastraCliente(ClienteDTO clienteDTO) {
-		Boolean isTaken = clienteRepository.listaClientes().stream()
+		Boolean isEmailTaken = clienteRepository.listaClientes().stream()
 				.filter(c -> c.getEmail().equals(clienteDTO.getEmail()))
 				.findFirst().isPresent();
 
-		System.out.println("\n\n ========= " + clienteDTO + "=============\n\n");
-		if (isTaken) {
+		if (isEmailTaken) {
 			throw new ResponseEntityException("Email já cadastrado: " + clienteDTO.getEmail(), "404");
 		}
 

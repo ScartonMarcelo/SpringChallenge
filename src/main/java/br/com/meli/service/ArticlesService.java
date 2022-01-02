@@ -13,7 +13,6 @@ import br.com.meli.util.OrdenadorProdutos.Ordenador;
 import java.net.URI;
 import java.util.List;
 
-import exception.BadRequestException;
 import exception.ResponseEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,20 +34,17 @@ public class ArticlesService {
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
-		// List<Produto> novosProdutos = articles.getArticles();
-		// List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
-		// for (Produto p : novosProdutos) {
-		// Produto produto = produtosExistentes.stream().filter(x ->
-		// x.getProductId().equals(p.getProductId()))
-		// .findAny().orElse(null);
-		// if (produto != null) {
-		// throw new BadRequestException("O produto com o id " + p.getProductId() + " já
-		// existe.");
-		// }
-		// }
-		// produtosExistentes.addAll(articles.getArticles());
-		// articlesRepository.serializaProdutos(produtosExistentes);
-		articlesRepository.serializaProdutos(articles.getArticles());
+		List<Produto> novosProdutos = articles.getArticles();
+		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
+		for (Produto p : novosProdutos) {
+			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
+					.findAny().orElse(null);
+			if (produto != null) {
+				throw new ResponseEntityException("O produto com o id " + p.getProductId() + " já existe.", "400");
+			}
+		}
+		produtosExistentes.addAll(articles.getArticles());
+		articlesRepository.serializaProdutos(produtosExistentes);
 	}
 
 	/**
@@ -64,12 +60,13 @@ public class ArticlesService {
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
 					.orElse(null);
 			if (produto == null) {
-				throw new BadRequestException("O produto com o id " + a.getProductId() + " não existe.");
+				throw new ResponseEntityException("O produto com o id " + a.getProductId() + " não existe.", "400");
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
-				throw new BadRequestException(
+				throw new ResponseEntityException(
 						"Não há estoque suficiente para o produto " + a.getName() + ", " +
-								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).");
+								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
+						"400");
 			}
 			purchaseList.add(produto);
 		}
