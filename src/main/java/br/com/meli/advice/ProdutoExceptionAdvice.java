@@ -2,6 +2,7 @@ package br.com.meli.advice;
 
 import br.com.meli.util.ResponseEntityErrorsUtils;
 import exception.BadRequestException;
+import exception.ResourceNotFoundException;
 import exception.ResponseEntityException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
