@@ -15,7 +15,7 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 	@ExceptionHandler(value = BadRequestException.class)
 	public ResponseEntity<?> handlePersistencia(BadRequestException resourse) {
 		String bodyOfResponse = resourse.getMessage();
-		return super.responseEntityFactory(bodyOfResponse, "404");
+		return super.responseEntityFactory(bodyOfResponse, "400");
 	}
 
 	/**
