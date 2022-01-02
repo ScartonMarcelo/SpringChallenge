@@ -6,7 +6,6 @@ import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
-import br.com.meli.util.ResponseEntityErrorsUtils;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
@@ -18,19 +17,16 @@ import exception.BadRequestException;
 import exception.ResponseEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 @Service
 public class ArticlesService {
 
 	@Autowired
 	private ArticleRepository articlesRepository;
-
 
 	/**
 	 * @param articles
@@ -39,17 +35,19 @@ public class ArticlesService {
 	 * @description Chama função para serializar Produtos em JSON
 	 */
 	public void salvarProdutos(Articles articles) {
-		//List<Produto> novosProdutos = articles.getArticles();
-		//List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
-		//for (Produto p : novosProdutos) {
-		//	Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
-		//			.findAny().orElse(null);
-		//	if (produto != null) {
-		//		throw new BadRequestException("O produto com o id " + p.getProductId() + " já existe.");
-		//	}
-		//}
-		//produtosExistentes.addAll(articles.getArticles());
-		//articlesRepository.serializaProdutos(produtosExistentes);
+		// List<Produto> novosProdutos = articles.getArticles();
+		// List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
+		// for (Produto p : novosProdutos) {
+		// Produto produto = produtosExistentes.stream().filter(x ->
+		// x.getProductId().equals(p.getProductId()))
+		// .findAny().orElse(null);
+		// if (produto != null) {
+		// throw new BadRequestException("O produto com o id " + p.getProductId() + " já
+		// existe.");
+		// }
+		// }
+		// produtosExistentes.addAll(articles.getArticles());
+		// articlesRepository.serializaProdutos(produtosExistentes);
 		articlesRepository.serializaProdutos(articles.getArticles());
 	}
 
@@ -109,21 +107,15 @@ public class ArticlesService {
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-<<<<<<< HEAD
 	 * @see OrdenadorProdutos
 	 *
 	 * @return List<Produto>
-=======
-	 * @return List
->>>>>>> main
 	 * @Description Condicionais para filtros & ordenadores
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
 			String brandName, Boolean freeShipping, Integer orderFilter) {
 
 		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
-
-		OrdenadorProdutos ordenadorProdutos = new OrdenadorProdutos();
 
 		/*
 		 * OrdenadorValues()
@@ -132,37 +124,44 @@ public class ArticlesService {
 		 */
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
-				listaProdutos = ordenadorProdutos.odernarProdutos(
+				listaProdutos = OrdenadorProdutos.odernarProdutos(
 						listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
-				throw new IllegalArgumentException("Order não pode ser: " + orderFilter);
+				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
-				listaProdutos = ordenadorProdutos.filtrarProdutos(
+				listaProdutos = OrdenadorProdutos.filtrarProdutos(
 						listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
-				listaProdutos = ordenadorProdutos.filtrarProdutos(
+				listaProdutos = OrdenadorProdutos.filtrarProdutos(
 						listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
+			} else {
+				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (categoryName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
+		} else {
+			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 		if (productName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
+		} else {
+			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 		if (brandName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 					listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
+		} else {
+			throw new ResponseEntityException("Filtro não aplicável.", "400");
 		}
 
 		return listaProdutos;
 	}
-
 
 	/**
 	 * @author Thomaz Ferreira
@@ -171,30 +170,30 @@ public class ArticlesService {
 	 * @return ArticlesDTO
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
-		if(articles.getArticles().size() == 0){
+		if (articles.getArticles().size() == 0) {
 			throw new ResponseEntityException("Não existe nenhum produto na lista", "400");
 		}
 
-		for(Produto p : articles.getArticles()){
-			if(p.getProductId() == null || p.getProductId().equals(""))
+		for (Produto p : articles.getArticles()) {
+			if (p.getProductId() == null || p.getProductId().equals(""))
 				throw new ResponseEntityException("O atributo productId não foi informado ou é nulo", "400");
-			if(p.getName() == null || p.getName().equals(""))
+			if (p.getName() == null || p.getName().equals(""))
 				throw new ResponseEntityException("O atributo name não foi informado ou é nulo", "400");
-			if(p.getCategory() == null || p.getCategory().equals(""))
+			if (p.getCategory() == null || p.getCategory().equals(""))
 				throw new ResponseEntityException("O atributo category não foi informado ou é nulo", "400");
-			if(p.getBrand() == null || p.getBrand().equals(""))
+			if (p.getBrand() == null || p.getBrand().equals(""))
 				throw new ResponseEntityException("O atributo brand não foi informado ou é nulo", "400");
-			if(p.getPrice() == null || p.getPrice().equals(""))
+			if (p.getPrice() == null || p.getPrice().equals(""))
 				throw new ResponseEntityException("O atributo price não foi informado ou é nulo", "400");
-			if(p.getQuantity() == null || p.getQuantity().equals(""))
+			if (p.getQuantity() == null || p.getQuantity().equals(""))
 				throw new ResponseEntityException("O atributo quantity não foi informado ou é nulo", "400");
-			if(p.getFreeShipping() == null)
+			if (p.getFreeShipping() == null)
 				throw new ResponseEntityException("O atributo freeShipping não foi informado ou é nulo", "400");
-			if(p.getPrestige() == null || p.getPrestige().equals(""))
+			if (p.getPrestige() == null || p.getPrestige().equals(""))
 				throw new ResponseEntityException("O atributo prestige não foi informado ou é nulo", "400");
-			else{
-				for(int i=0; i<p.getPrestige().length(); i++){
-					if(p.getPrestige().charAt(i) != '*')
+			else {
+				for (int i = 0; i < p.getPrestige().length(); i++) {
+					if (p.getPrestige().charAt(i) != '*')
 						throw new ResponseEntityException("O atributo prestige deve aceitar apenas *", "400");
 				}
 			}
