@@ -12,6 +12,7 @@ import lombok.Data;
 public class Cliente {
 	private final String name;
 	private String email;
+	private String password;
 	private final UUID id;
 	private StatusClient status;
 
@@ -19,7 +20,7 @@ public class Cliente {
 		this.id = UUID.randomUUID();
 		this.name = name;
 		this.email = email;
-		this.status = StatusClient.ACTIVE;
+		this.status = StatusClient.INACTIVE;
 	}
 
 	public enum StatusClient {
