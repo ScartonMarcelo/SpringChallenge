@@ -1,7 +1,6 @@
 package br.com.meli.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,9 @@ public class ClienteService {
 	@Autowired
 	private ValidarUsuario validarUsuario;
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * @author André Arroxellas
+	 *         Método de cadastro de cliente. Chama método save em Repositório
 	 * @param clienteDTO
 	 * @return ClienteDTO
 	 */
@@ -41,27 +39,12 @@ public class ClienteService {
 		return clienteDTO;
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Método de busca de cliente por email (Admin)
+	 *
+	 * @author André Arroxellas
 	 * @param email
-	 * @return StatusClient
-	 */
-	public StatusClient buscaCliente(String email) {
-		validarUsuario.isEmailValid(email);
-		return clienteRepository.getAll().stream()
-				.filter(c -> c.getEmail().equals(email))
-				.findFirst()
-				.map(Cliente::getStatus)
-				.orElse(null); // TODO: implement orElseThrow(error)
-	}
-
-
-	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
-	 * @param email
+	 * @throws ResponseEntityException
 	 * @return CLiente
 	 */
 	public Cliente buscaAdminCliente(String email) {
@@ -69,14 +52,15 @@ public class ClienteService {
 		return clienteRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
 				.findFirst()
-				.orElse(null); // TODO: implement orElseThrow(error)
+				.orElseThrow(() -> new ResponseEntityException("Email inválido", "400"));
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
-	 * @return List
+	 * Lista todos os usuários do sistema
+	 *
+	 * @author André Arroxellas, Thiago Campos
+	 * @throws ResponseEntityException
+	 * @return List<ClienteDTO>
 	 */
 	public List<ClienteDTO> listaClientes() {
 		// Deve ser rota Admin
@@ -89,10 +73,9 @@ public class ClienteService {
 				.collect(Collectors.toList());
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * @author André Arroxellas
+	 *         Método para mudança de atributos não 'final' de cliente em memória
 	 * @param email
 	 * @param emailChange
 	 * @param password
@@ -114,39 +97,23 @@ public class ClienteService {
 		return ClienteDTO.converteToDTO(c);
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
-	 * @param state
+	 * Filtra por Estado
+	 *
+	 * @author Thiago Campos
+	 * @param estado
+	 * @throws ResponseEntityException
 	 * @return List
 	 */
-	public List<Cliente> filteredByState(String state) {
+	public List<Cliente> filteredByState(String estado) {
 		List<Cliente> result = clienteRepository.getAll().stream()
-				.filter(c -> c.getEstado().equalsIgnoreCase(state))
+				.filter(c -> c.getEstado().equalsIgnoreCase(estado))
 				.collect(Collectors.toList());
 
 		if (result.size() == 0)
-			throw new ResponseEntityException(String.format("A pesquisa pelo valor %s retornou nula", state), "404");
+			throw new ResponseEntityException(String.format("A pesquisa pelo valor %s retornou nula", estado), "404");
 		else
 			return result;
 	}
 
-
-	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
-	 * @param email
-	 * @param password
-	 * @return String
-	 */
-	// TODO: implement route for session + cart
-	public String sessionCliente(String email, String password) {
-		Optional<Cliente> clienteAuth = clienteRepository.getAll().stream()
-				.filter(c -> c.getEmail().equals(email))
-				.filter(c -> c.getPassword().equals(password))
-				.findFirst();
-
-		return "Sessão para:" + "iniciada";
-	}
 }

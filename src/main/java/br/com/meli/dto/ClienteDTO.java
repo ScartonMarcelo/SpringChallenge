@@ -13,11 +13,18 @@ public class ClienteDTO {
 	private String estado;
 	private StatusClient status;
 
-	public static ClienteDTO converteToDTO(Cliente c) {
+	/**
+	 * Converte obejto Cliente em ClienteDTO
+	 *
+	 * @author André Arroxellas
+	 * @param cliente
+	 * @return ClienteDTO
+	 */
+	public static ClienteDTO converteToDTO(Cliente cliente) {
 		return new ClienteDTO(
-				c.getName(),
-				c.getEmail(),
-				c.getEstado(),
-				c.getStatus());
+				cliente.getName(),
+				cliente.getEmail(),
+				cliente.getEstado(),
+				cliente.getStatus());
 	}
 }

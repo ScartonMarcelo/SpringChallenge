@@ -29,36 +29,39 @@ public class ArticlesController {
 	@Autowired
 	private ArticlesService articlesService;
 
-
 	/**
-	 * @author Thomaz Ferreira
 	 * Rota para cadastrar produtos
+	 *
+	 * @author Thomaz Ferreira
 	 * @param articles
 	 * @param uriBuilder
 	 * @return ArticlesDTO
 	 */
 	@PostMapping("/insert-articles-request")
-	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
+			UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return articlesService.cadastraProdutos(articles, uri);
 	}
 
-
 	/**
+	 * Endpoint responsavel pelo envio de pedido de compra
+	 *
+	 * @author Marcelo Scarton
 	 * @param articlesPurchaseList
 	 * @param uriBuilder
 	 * @return ResponseEntity<PurchaseResponse>
-	 * @author Marcelo Scarton
-	 * Endpoint responsavel pelo envio de pedido de compra
 	 */
 	@PostMapping("/purchase-request")
-	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList, UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
+			UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		return  articlesService.adicionaCarrinho(articlesPurchaseList ,uri);
+		return articlesService.adicionaCarrinho(articlesPurchaseList, uri);
 	}
 
-
 	/**
+	 * Rota para pesquisa em query de produtos
+	 *
 	 * @author André Arroxellas , Francisco Alves , Thomaz Ferreira
 	 * @param categoryName
 	 * @param productName
@@ -66,7 +69,6 @@ public class ArticlesController {
 	 * @param freeShipping
 	 * @param orderFilter
 	 * @return ResponseEntity
-	 * Rota para pesquisa em query de produtos
 	 */
 	@GetMapping("/articles")
 	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(

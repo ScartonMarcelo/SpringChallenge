@@ -17,6 +17,15 @@ public class Cliente {
 	private final UUID id;
 	private StatusClient status;
 
+	/**
+	 * Instancia um Cliente com base em um ClienteDTO
+	 *
+	 * @author André Arroxellas
+	 * @param name
+	 * @param email
+	 * @param estado
+	 * @return Cliente
+	 */
 	public Cliente(String name, String email, String estado) {
 		this.id = UUID.randomUUID();
 		this.name = name;

@@ -17,9 +17,11 @@ public class ArticleRepository {
 	private final String JSON_FILE_NAME = "produtos.json";
 
 	/**
-	 * @author
-	 * ESCRIÇÃO AQUI
+	 * Serializa lista de produtos e armazena em arquivo JSON
+	 *
+	 * @author Thomaz Ferreira
 	 * @param produtos
+	 * @throws ResponseEntityException
 	 */
 	public void serializaProdutos(List<Produto> produtos) {
 		try {
@@ -31,9 +33,11 @@ public class ArticleRepository {
 	}
 
 	/**
-	 * @author
-	 * DESCRIÇÃO AQUI
+	 * Deserializa lista de produtos em JSON e converte em objeto
+	 *
+	 * @author André Arroxellas, Thomaz Ferreira
 	 * @return List
+	 * @throws ResponseEntityException
 	 */
 	public List<Produto> desserializaProdutos() {
 		ObjectMapper mapper = new ObjectMapper();

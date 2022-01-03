@@ -12,8 +12,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 
 	/**
-	 * @author Thiago Campos, Thomaz Ferreira
 	 * Funçao responsável por lançar uma exception personalizada
+	 *
+	 * @author Thiago Campos, Thomaz Ferreira
 	 * @param e
 	 * @return ResponseEntity
 	 */
@@ -24,10 +25,11 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 		return super.responseEntityFactory(e.getMessage(), e.getException(), e.getStatusCode());
 	}
 
-
 	/**
+	 * Trata exceptions de HttpMessageNotReadableException e retorna payload no
+	 * modelo definido em responseEntityFactory
+	 *
 	 * @author Thomaz Ferreira
-	 * Trata exceptions de HttpMessageNotReadableException e retorna payload no modelo definido em responseEntityFactory
 	 * @param e
 	 * @return ResponseEntity
 	 */
@@ -36,10 +38,10 @@ public class ProdutoExceptionAdvice extends ResponseEntityErrorsUtils {
 		return super.responseEntityFactory("JSON inválido", "400");
 	}
 
-
 	/**
+	 * Trata exceptions MethodArgumentTypeMismatchException em parâmetros de rota
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO FUNÇÃO AQUI
 	 * @param e
 	 * @return ResponseEntity
 	 */

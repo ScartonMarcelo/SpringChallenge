@@ -11,8 +11,9 @@ public class ResponseEntityErrorsUtils {
 	private Map<String, String> objectResponse = new HashMap<>();
 
 	/**
-	 * @author Thomaz Ferreira
 	 * Retorna ResponseEntity correspondente ao statusCode de erro informado
+	 *
+	 * @author Thomaz Ferreira
 	 * @param exceptionMsg
 	 * @param statusCode
 	 * @return ResponseEntity
@@ -31,10 +32,10 @@ public class ResponseEntityErrorsUtils {
 		}
 	}
 
-
 	/**
-	 * @author Thomaz Ferreira
 	 * Retorna ResponseEntity correspondente ao statusCode de erro informado
+	 *
+	 * @author Thomaz Ferreira
 	 * @param exceptionMsg
 	 * @param statusCode
 	 * @return ResponseEntity

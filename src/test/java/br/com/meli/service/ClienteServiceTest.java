@@ -22,9 +22,10 @@ public class ClienteServiceTest {
 	}
 
 	/**
+	 * Verifca se o retorno do service getAllClientes retorna todos os
+	 * itens do documento
+	 *
 	 * @author Thiago Campos
-	 * @description Verifca se o retorno do service getAllClientes retorna todos os
-	 *              itens do documento
 	 */
 	@Test
 	void DeveRetornarTodosOsItensDoBanco() {
@@ -34,10 +35,11 @@ public class ClienteServiceTest {
 	}
 
 	/**
+	 * Verificando se o filtre Cliente por estado possui o retorno
+	 * correto, também verifica se o parametro passado possui
+	 * tratamento de Case
+	 *
 	 * @author Thiago Campos
-	 * @description Verificando se o filtre Cliente por estado possui o retorno
-	 *              correto, também verifica se o parametro passado possui
-	 *              tratamento de Case
 	 */
 	@Test
 	void DeveriaRetornarUmaLIstaDeClientesFiltradosPorEstado() {
@@ -47,8 +49,9 @@ public class ClienteServiceTest {
 	}
 
 	/**
+	 * Aguarda receber um Erro do tipo ResponseEntityException
+	 *
 	 * @author Thiago Campos
-	 * @description Aguarda receber um Erro do tipo ResponseEntityException
 	 */
 	@Test
 	void DeveriaRetornarUmaExceptionQuandoOItemBuscadoPeloClienteNaoExiste() {
@@ -56,9 +59,10 @@ public class ClienteServiceTest {
 	}
 
 	/**
+	 * Verifica se a msg de erro corresponde ao aguardado pela regra de
+	 * negócio
+	 *
 	 * @author Thiago Campos
-	 * @description Verifica se a msg de erro corresponde ao aguardado pela regra de
-	 *              negócio
 	 */
 	@Test
 	void DeveriaRetornarOItemQUeOcasionouOErro() {

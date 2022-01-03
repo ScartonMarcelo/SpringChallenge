@@ -11,28 +11,29 @@ public class ClientesRepository {
 	private List<Cliente> clientes = new ArrayList<>();
 
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Salva em memória dados de Cliente
+	 *
+	 * @author André Arroxellas
 	 * @param cliente
 	 */
 	public void save(Cliente cliente) {
 		clientes.add(cliente);
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Remove em memória dados de Cliente
+	 *
+	 * @author André Arroxellas
 	 * @param cliente
 	 */
 	public void delete(Cliente cliente) {
 		clientes.remove(cliente);
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Busca em memória dados de Clientes
+	 *
+	 * @author André Arroxellas
 	 * @return List
 	 */
 	public List<Cliente> getAll() {

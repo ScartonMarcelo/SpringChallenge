@@ -12,11 +12,12 @@ public class ValidarUsuario {
 	@Autowired
 	ClientesRepository clientesRepository;
 
-
 	/**
-	 * @author ??
-	 * DESCRIÇÃO AQUI
+	 * Valida se email já está cadastrado
+	 *
+	 * @author André Arroxellas
 	 * @param email
+	 * @throws ResponseEntityException se email existente
 	 */
 	public void isEmailTaken(String email) {
 		Boolean isEmailTaken = clientesRepository.getAll().stream()
@@ -28,11 +29,12 @@ public class ValidarUsuario {
 		}
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Valida se email está padronizado
+	 *
+	 * @author André Arroxellas
 	 * @param email
+	 * @throws ResponseEntityException se email fora do padrão
 	 */
 	public void isEmailValid(String email) {
 		if (email == null) {
@@ -45,11 +47,12 @@ public class ValidarUsuario {
 		}
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Valida se nome do parâmetro está padronizado
+	 *
+	 * @author André Arroxellas
 	 * @param name
+	 * @throws ResponseEntityException se nome de parâmetro fora do padrão
 	 */
 	public void isNameValid(String name) {
 		if (name == null || name.trim() == "") {
@@ -57,11 +60,12 @@ public class ValidarUsuario {
 		}
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
+	 * Valida se password está padronizado
+	 *
+	 * @author André Arroxellas
 	 * @param password
+	 * @throws ResponseEntityException se password fora do padrão
 	 */
 	public void isPasswordValid(String password) {
 		if (password == null || password.trim().equals("")) {
@@ -69,14 +73,15 @@ public class ValidarUsuario {
 		}
 	}
 
-
 	/**
-	 * @author ???
-	 * DESCRIÇÃO AQUI
-	 * @param c
+	 * Valida se Cliente não está cadastrado
+	 *
+	 * @author André Arroxellas
+	 * @param cliente
+	 * @throws ResponseEntityException se usuário existente no sistema
 	 */
-	public void isRegistered(Cliente c) {
-		if (c == null) {
+	public void isRegistered(Cliente cliente) {
+		if (cliente == null) {
 			throw new ResponseEntityException("Email não registrado no sistema", "400");
 		}
 	}

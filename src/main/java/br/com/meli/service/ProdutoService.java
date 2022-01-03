@@ -2,7 +2,8 @@ package br.com.meli.service;
 
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
-import exception.ResourceNotFoundException;
+import exception.ResponseEntityException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +17,20 @@ public class ProdutoService {
 	private ArticleRepository articleRepository;
 
 	/**
+	 * Recupera a lista completa de produtos e filtra por categoria
+	 *
 	 * @author Thiago Campos
-	 * Recupera a lsita completa de produtos e filtra por categoria
-	 * @param  categoryName
+	 * @param categoryName
+	 * @throws ResponseEntityException
 	 * @return List
 	 */
 	public List<Produto> filterByCategory(String categoryName) {
 		List<Produto> products = articleRepository.desserializaProdutos()
-			.stream()
-			.filter(produto -> produto.getCategory().equalsIgnoreCase(categoryName))
-			.collect(Collectors.toList());
-		if(products.size() == 0)
-			throw new ResourceNotFoundException(String.format("O parametro %s não foi localizado", categoryName));
+				.stream()
+				.filter(produto -> produto.getCategory().equalsIgnoreCase(categoryName))
+				.collect(Collectors.toList());
+		if (products.size() == 0)
+			throw new ResponseEntityException("O parametro " + categoryName + " não foi localizado", "400");
 		else
 			return products;
 	}

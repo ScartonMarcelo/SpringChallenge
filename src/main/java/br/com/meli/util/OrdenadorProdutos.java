@@ -9,17 +9,19 @@ import br.com.meli.entity.Produto;
 import exception.ResponseEntityException;
 
 /**
- * @author André Arroxellas
  * métodos de ordenação e filtro
+ *
+ * @author André Arroxellas
  */
 public class OrdenadorProdutos {
 
 	/**
+	 * Método de ornenação
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO AQUI
-	 * @param listaProdutos
-	 * @param comparator
-	 * @return List
+	 * @param List<Produto>
+	 * @param Comparator<Produto>
+	 * @return List<Produto>
 	 */
 	static List<Produto> ordenaPorAtributo(List<Produto> listaProdutos, Comparator<Produto> comparator) {
 		return listaProdutos.stream()
@@ -27,12 +29,12 @@ public class OrdenadorProdutos {
 				.collect(Collectors.toList());
 	}
 
-
 	/**
+	 * Método de filtro
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO AQUI
-	 * @param listaProdutos
-	 * @param selector
+	 * @param List<Produto>
+	 * @param Predicate<Produto>
 	 * @return List
 	 */
 	static List<Produto> filtraPorAtributo(List<Produto> listaProdutos, Predicate<Produto> selector) {
@@ -41,10 +43,10 @@ public class OrdenadorProdutos {
 				.collect(Collectors.toList());
 	}
 
-
 	/**
+	 * Lista de ordenadores disponíveis
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO AQUI
 	 */
 	public enum Ordenador {
 		ORDENA_ALFABETICAMENTE_CRESCENTE(0),
@@ -63,6 +65,11 @@ public class OrdenadorProdutos {
 		}
 	}
 
+	/**
+	 * Lista de filtros disponíveis
+	 *
+	 * @author André Arroxellas
+	 */
 	public enum Filtro {
 		FILTRA_CATEGORY_NAME(0),
 		FILTRA_PRODUCT_NAME(1),
@@ -81,12 +88,14 @@ public class OrdenadorProdutos {
 		}
 	}
 
-
 	/**
+	 * Método que passa método de ordenação conforme Enum Ordenador
+	 * disponível
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO AQUI
-	 * @param listaProdutos
-	 * @param ordenador
+	 * @param List<Produto>
+	 * @param Ordenador
+	 * @throws ResponseEntityException
 	 * @return List
 	 */
 	public static List<Produto> odernarProdutos(List<Produto> listaProdutos, Ordenador ordenador) {
@@ -108,13 +117,14 @@ public class OrdenadorProdutos {
 		}
 	}
 
-
 	/**
+	 * Método que passa método de filtro conforme Enum Filtro
+	 *
 	 * @author André Arroxellas
-	 * DESCRIÇÃO AQUI
-	 * @param listaProdutos
-	 * @param atributoString
-	 * @param filtro
+	 * @param List<Produto>
+	 * @param String
+	 * @param Filtro
+	 * @throws ResponseEntityException
 	 * @return List
 	 */
 	public static List<Produto> filtrarProdutos(List<Produto> listaProdutos, String atributoString,

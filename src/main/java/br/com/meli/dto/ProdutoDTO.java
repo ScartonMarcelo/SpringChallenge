@@ -33,10 +33,10 @@ public class ProdutoDTO {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String prestige;
 
-
 	/**
-	 * @author Thomaz Ferreira
 	 * Converte obejto ProdutoDTO em Produto
+	 *
+	 * @author Thomaz Ferreira
 	 * @param dto
 	 * @return Produto
 	 */
@@ -53,10 +53,9 @@ public class ProdutoDTO {
 				.build();
 	}
 
-
 	/**
 	 * @author Thomaz Ferreira
-	 * Converte obejto Produto em ProdutoDTO
+	 *         Converte obejto Produto em ProdutoDTO
 	 * @param p
 	 * @return ProdutoDTO
 	 */
@@ -73,10 +72,9 @@ public class ProdutoDTO {
 				.build();
 	}
 
-
 	/**
 	 * @author Thomaz Ferreira
-	 * Converte lista de objetos Produtos em uma lista de objetos ProdutoDTO
+	 *         Converte lista de objetos Produtos em uma lista de objetos ProdutoDTO
 	 * @param articles
 	 * @return List
 	 */
@@ -88,10 +86,9 @@ public class ProdutoDTO {
 		return lista;
 	}
 
-
 	/**
 	 * @author Thomaz Ferreira
-	 * Converte lista de objetos ProdutoDTO em uma lista de objetos Produto
+	 *         Converte lista de objetos ProdutoDTO em uma lista de objetos Produto
 	 * @param articles
 	 * @return List
 	 */
