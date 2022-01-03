@@ -71,7 +71,7 @@ public class ArticlesController {
 	 * @return ResponseEntity
 	 */
 	@GetMapping("/articles")
-	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(
+	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
 			@RequestParam(value = "category", required = false) String categoryName,
 			@RequestParam(value = "product", required = false) String productName,
 			@RequestParam(value = "brand", required = false) String brandName,
@@ -80,7 +80,6 @@ public class ArticlesController {
 		List<Produto> articles = articlesService.trateRequestQuery(
 				categoryName, productName, brandName, freeShipping, orderFilter);
 		return ResponseEntity.ok().body(articles.stream()
-				.map(ProdutoDTO::converte)
 				.collect(Collectors.toList()));
 	}
 }
