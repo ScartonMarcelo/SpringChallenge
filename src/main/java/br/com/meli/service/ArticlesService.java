@@ -14,7 +14,6 @@ import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 
 import exception.ResponseEntityException;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Map;
 
 @Service
 public class ArticlesService {
@@ -32,10 +30,11 @@ public class ArticlesService {
 	@Autowired
 	private ArticleRepository articlesRepository;
 
-
 	/**
-	 * @author ?????
 	 * Chama função para serializar Produtos em JSON
+	 *
+	 * @author Marcelo Scarton
+	 * @throws ResponseEntityException
 	 * @param articles
 	 */
 	public void salvarProdutos(Articles articles) {
@@ -43,7 +42,7 @@ public class ArticlesService {
 		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
 		for (Produto p : novosProdutos) {
 			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
-				.findAny().orElse(null);
+					.findAny().orElse(null);
 			if (produto != null) {
 				throw new ResponseEntityException("O produto com o id " + p.getProductId() + " já existe.", "400");
 			}
@@ -52,35 +51,38 @@ public class ArticlesService {
 		articlesRepository.serializaProdutos(produtosExistentes);
 	}
 
-
 	/**
-	 * @author Marcelo Scarton
 	 * Retorna lista de Produtos solicitados para compra
+	 *
+	 * @author Marcelo Scarton
 	 * @param articlesPurchaseList
+	 * @throws ResponseEntityException
 	 * @return List
 	 */
 	private List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
 		List<Produto> purchaseList = Carrinho.produtos;
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
-			if (a.getQuantity() <=0)
-				throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
+			if (a.getQuantity() <= 0)
+				throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0", "400");
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
-				.orElse(null);
+					.orElse(null);
 			if (produto == null) {
 				throw new ResponseEntityException("O produto com o id " + a.getProductId() + " não existe.", "400");
 			}
 			if (!produto.getName().equalsIgnoreCase(a.getName())) {
-				throw new ResponseEntityException("O produto nome " + a.getName() + " não corresponde ao nome do produto com id " + produto.getProductId(), "400");
+				throw new ResponseEntityException("O produto nome " + a.getName()
+						+ " não corresponde ao nome do produto com id " + produto.getProductId(), "400");
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new ResponseEntityException(
-					"Não há estoque suficiente para o produto " + a.getName() + ", " +
-						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
-					"400");
+						"Não há estoque suficiente para o produto " + a.getName() + ", " +
+								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
+						"400");
 			}
-			Produto produtoCarrinho = purchaseList.stream().filter(p -> p.getProductId().equals(produto.getProductId())).findAny()
-				.orElse(null);
+			Produto produtoCarrinho = purchaseList.stream().filter(p -> p.getProductId().equals(produto.getProductId()))
+					.findAny()
+					.orElse(null);
 			if (produtoCarrinho == null) {
 				produto.setQuantity(a.getQuantity());
 				purchaseList.add(produto);
@@ -91,10 +93,10 @@ public class ArticlesService {
 		return purchaseList;
 	}
 
-
 	/**
-	 * @author Marcelo Scarton
 	 * Retorna valor total da lista de Produtos solicitados para compra
+	 *
+	 * @author Marcelo Scarton
 	 * @param articles
 	 * @return BigDecimal
 	 */
@@ -106,30 +108,31 @@ public class ArticlesService {
 		return total;
 	}
 
-
 	/**
-	 * @author Francisco Alves
 	 * Retorna todos os produtos cadastrados
+	 *
+	 * @author Francisco Alves
 	 * @return List
 	 */
 	public List<Produto> getProdutos() {
 		return articlesRepository.desserializaProdutos();
 	}
 
-
 	/**
-	 * @author André Arroxellas
 	 * Condicionais para filtros & ordenadores
+	 *
+	 * @author André Arroxellas
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
+	 * @throws ResponseEntityException
 	 * @return List<Produto>
 	 * @see OrdenadorProdutos
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
-										   String brandName, Boolean freeShipping, Integer orderFilter) {
+			String brandName, Boolean freeShipping, Integer orderFilter) {
 
 		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
 
@@ -142,7 +145,7 @@ public class ArticlesService {
 			if (orderFilter <= 3 && orderFilter >= 0) {
 
 				listaProdutos = OrdenadorProdutos.odernarProdutos(
-					listaProdutos, Ordenador.values()[orderFilter]);
+						listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
 				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
@@ -150,35 +153,36 @@ public class ArticlesService {
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
 				listaProdutos = OrdenadorProdutos.filtrarProdutos(
-					listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
+						listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
 				listaProdutos = OrdenadorProdutos.filtrarProdutos(
-					listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
+						listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
 			} else {
 				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (categoryName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-				listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
+					listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-				listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
+					listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-				listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
+					listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
 		}
 		return listaProdutos;
 	}
 
-
 	/**
-	 * @author Thomaz Ferreira
 	 * Cadastra produtos informados no payload
+	 *
+	 * @author Thomaz Ferreira
 	 * @param articles
 	 * @param uri
+	 * @throws ResponseEntityException
 	 * @return ResponseEntity
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
@@ -191,9 +195,11 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @author Thomaz Ferreira
 	 * Valida JSON de cadastro de produtos
+	 *
+	 * @author Thomaz Ferreira
 	 * @param articles
+	 * @throws ResponseEntityException
 	 */
 	private void validaJsonCadastroProdutos(Articles articles) {
 
@@ -220,7 +226,8 @@ public class ArticlesService {
 			if (p.getQuantity() <= 0)
 				throw new ResponseEntityException("A quantidade a ser cadastrada deve ser maior que 0", "400");
 			if (p.getFreeShipping() == null)
-				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo",
+						"400");
 			if (p.getPrestige() == null || p.getPrestige().equals(""))
 				throw new ResponseEntityException("O valor do atributo prestige não foi informado ou é nulo", "400");
 			else {
@@ -233,13 +240,14 @@ public class ArticlesService {
 	}
 
 	/**
+	 * Função orquestradora do carrinho
+	 *
 	 * @author Marcelo Scarton, Francisco Alves
-	 * DESCRIÇÃO AQUI
 	 * @param articlesPurchaseList
 	 * @param uri
 	 * @return ResponseEntity
 	 */
-	public ResponseEntity<PurchaseResponse> adicionaCarrinho( ArticlesPurchase articlesPurchaseList , URI uri){
+	public ResponseEntity<PurchaseResponse> adicionaCarrinho(ArticlesPurchase articlesPurchaseList, URI uri) {
 		List<Produto> articles = this.retornarProdutosPurchase(articlesPurchaseList);
 		this.validaEstoque(articlesPurchaseList);
 		BigDecimal total = this.retornarTotalPurchase(articles);
@@ -247,11 +255,12 @@ public class ArticlesService {
 		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
 	}
 
-
 	/**
-	 * @author Francisco Alves , Thomaz Ferreira
 	 * Metodo que faz o controle e validação de estoque
+	 *
+	 * @author Francisco Alves , Thomaz Ferreira
 	 * @param articlesPurchase
+	 * @throws ResponseEntityException
 	 */
 	private void validaEstoque(ArticlesPurchase articlesPurchase) {
 		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
@@ -263,14 +272,14 @@ public class ArticlesService {
 
 		for (Produto p : produtos) {
 			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
-				if (apd.getQuantity()<=0)
-					throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
+				if (apd.getQuantity() <= 0)
+					throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0", "400");
 				if (p.getProductId().equals(apd.getProductId())) {
-					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() >0) {
+					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() > 0) {
 						p.setQuantity(p.getQuantity() - apd.getQuantity());
 						break;
 					} else {
-						throw new ResponseEntityException("Quantidade indisponivel","400");
+						throw new ResponseEntityException("Quantidade indisponivel", "400");
 					}
 				}
 			}

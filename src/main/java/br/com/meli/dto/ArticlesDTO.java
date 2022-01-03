@@ -18,8 +18,9 @@ public class ArticlesDTO {
 	private List<ProdutoDTO> articlesDTO = new ArrayList<>();
 
 	/**
-	 * @author Thomaz Ferreira
 	 * Converte objeto Articles em ArticlesDTO
+	 *
+	 * @author Thomaz Ferreira
 	 * @param article
 	 * @return ArticlesDTO
 	 */
@@ -30,8 +31,9 @@ public class ArticlesDTO {
 	}
 
 	/**
-	 * @author Thomaz Ferreira
 	 * Converte objeto ArticleDTO em Article
+	 *
+	 * @author Thomaz Ferreira
 	 * @param dto
 	 * @return Articles
 	 */
