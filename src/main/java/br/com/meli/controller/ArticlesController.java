@@ -1,6 +1,7 @@
 package br.com.meli.controller;
 
 import br.com.meli.dto.ArticlesDTO;
+import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
@@ -11,7 +12,6 @@ import br.com.meli.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,13 +40,15 @@ public class ArticlesController {
 
 	/**
 	 * Author: Thomaz Ferreira
+	 *
 	 * @Description Rota para cadastrar produtos
 	 * @param articles
 	 * @param uriBuilder
 	 * @return ArticlesDTO
 	 */
 	@PostMapping("/insert-articles-request")
-	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
+			UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return articlesService.cadastraProdutos(articles, uri);
 	}
@@ -70,32 +73,18 @@ public class ArticlesController {
 	}
 
 	/**
-	 * @Author: Francisco Alves , Thomaz Ferreira
-	 * @Description Rota para listar produtos
-	 * @return ResponseEntity<List < Produto>>
-	 */
-	/*
-	 * @GetMapping("/articles")
-	 * public ResponseEntity<List<Produto>> getAll() {
-	 * produtos = articleService.getProdutos();
-	 * return ResponseEntity.ok(produtos);
-	 * }
-	 */
-
-	/**
-	 * Author: André Arroxellas
+	 * Author: André Arroxellas , Francisco Alves , Thomaz Ferreira
 	 *
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @param
 	 * @return ResponseEntity<List < ProdutoDTO>>
 	 * @Description Rota para pesquisa em query de produtos
 	 */
 	@GetMapping("/articles")
-	private ResponseEntity<List<Produto>> getListaProdutosFiltradoOrdenado(
+	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(
 			@RequestParam(value = "category", required = false) String categoryName,
 			@RequestParam(value = "product", required = false) String productName,
 			@RequestParam(value = "brand", required = false) String brandName,
@@ -103,6 +92,8 @@ public class ArticlesController {
 			@RequestParam(value = "order", required = false) Integer orderFilter) {
 		List<Produto> articles = articlesService.trateRequestQuery(
 				categoryName, productName, brandName, freeShipping, orderFilter);
-		return ResponseEntity.ok().body(articles);
+		return ResponseEntity.ok().body(articles.stream()
+				.map(ProdutoDTO::converte)
+				.collect(Collectors.toList()));
 	}
 }

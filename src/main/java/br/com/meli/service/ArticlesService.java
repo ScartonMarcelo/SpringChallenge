@@ -6,32 +6,26 @@ import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
-import br.com.meli.util.ResponseEntityErrorsUtils;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
-import br.com.meli.util.OrdenadorProdutos.Shipping;
 
 import java.net.URI;
 import java.util.List;
 
-import exception.BadRequestException;
 import exception.ResponseEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 @Service
 public class ArticlesService {
 
 	@Autowired
 	private ArticleRepository articlesRepository;
-
 
 	/**
 	 * @param articles
@@ -70,8 +64,11 @@ public class ArticlesService {
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new ResponseEntityException(
+
 					"Não há estoque suficiente para o produto " + a.getName() + ", " +
-						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).", "400");
+						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
+					"400");
+
 			}
 			purchaseList.add(produto);
 		}
@@ -109,94 +106,115 @@ public class ArticlesService {
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @return List
+	 * @return List<Produto>
 	 * @Description Condicionais para filtros & ordenadores
+	 * @see OrdenadorProdutos
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
 										   String brandName, Boolean freeShipping, Integer orderFilter) {
 
 		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
 
-		OrdenadorProdutos ordenadorProdutos = new OrdenadorProdutos();
-
+		/*
+		 * OrdenadorValues()
+		 * [ORDENA_ALFABETICAMENTE_CRESCENTE, ORDENA_ALFABETICAMENTE_DECRESCENTE,
+		 * ORDENA_MAIOR_PRECO, ORDENA_MENOR_PRECO]
+		 */
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
-				listaProdutos = ordenadorProdutos.odernarProdutos(
-					listaProdutos, null, Ordenador.values()[orderFilter]);
+
+				listaProdutos = OrdenadorProdutos.odernarProdutos(
+					listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
-				throw new IllegalArgumentException("Order não pode ser: " + orderFilter);
+				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
-				listaProdutos = ordenadorProdutos.filtrarShipping(
-					listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
+				listaProdutos = OrdenadorProdutos.filtrarProdutos(
+					listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
-				listaProdutos = ordenadorProdutos.filtrarShipping(
-					listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
+				listaProdutos = OrdenadorProdutos.filtrarProdutos(
+					listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
+			} else {
+				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (categoryName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
+				listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
+				listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
-			listaProdutos = ordenadorProdutos.filtrarProdutos(
-				listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
+			listaProdutos = OrdenadorProdutos.filtrarProdutos(
+				listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
 		}
-
 		return listaProdutos;
 	}
-
 
 	/**
 	 * @param articles
 	 * @return ArticlesDTO
 	 * @author Thomaz Ferreira
-	 * @description Valida JSON e cadastra produtos
+	 * @description cadastra produtos informados no payload
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
 		if (articles.getArticles().size() == 0) {
 			throw new ResponseEntityException("Não existe nenhum produto na lista", "400");
 		}
+		validaJsonCadastroProdutos(articles);
+		articlesRepository.serializaProdutos(articles.getArticles());
+		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+	}
+
+	/**
+	 * @param articles
+	 * @return void
+	 * @author Thomaz Ferreira
+	 * @description Valida JSON de cadastro de produtos
+	 */
+	private void validaJsonCadastroProdutos(Articles articles) {
+
+		ArrayList tmpId = new ArrayList();
 
 		for (Produto p : articles.getArticles()) {
 			if (p.getProductId() == null || p.getProductId().equals(""))
-				throw new ResponseEntityException("O atributo productId não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo productId não foi informado ou é nulo", "400");
+
+			if (tmpId.contains(p.getProductId()))
+				throw new ResponseEntityException("Não é possível cadastrar mais de 1 produto com o mesmo Id", "400");
+			tmpId.add(p.getProductId());
+
 			if (p.getName() == null || p.getName().equals(""))
-				throw new ResponseEntityException("O atributo name não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo name não foi informado ou é nulo", "400");
 			if (p.getCategory() == null || p.getCategory().equals(""))
-				throw new ResponseEntityException("O atributo category não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo category não foi informado ou é nulo", "400");
 			if (p.getBrand() == null || p.getBrand().equals(""))
-				throw new ResponseEntityException("O atributo brand não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo brand não foi informado ou é nulo", "400");
 			if (p.getPrice() == null || p.getPrice().equals(""))
-				throw new ResponseEntityException("O atributo price não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo price não foi informado ou é nulo", "400");
 			if (p.getQuantity() == null || p.getQuantity().equals(""))
-				throw new ResponseEntityException("O atributo quantity não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo quantity não foi informado ou é nulo", "400");
 			if (p.getFreeShipping() == null)
-				throw new ResponseEntityException("O atributo freeShipping não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
 			if (p.getPrestige() == null || p.getPrestige().equals(""))
-				throw new ResponseEntityException("O atributo prestige não foi informado ou é nulo", "400");
-			else {
+				throw new ResponseEntityException("O valor do atributo prestige não foi informado ou é nulo", "400");
+			else{
 				for (int i = 0; i < p.getPrestige().length(); i++) {
 					if (p.getPrestige().charAt(i) != '*')
 						throw new ResponseEntityException("O atributo prestige deve aceitar apenas *", "400");
 				}
 			}
 		}
-
-		this.salvarProdutos(articles);
-		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
-/**
- * @Author: Francisco Alves , Thomaz Ferreira
- * @Description Metodo que faz o controle de estoque
- *
-*/
+
+	/**
+	 * @Author: Francisco Alves , Thomaz Ferreira
+	 * @Description Metodo que faz o controle de estoque
+	 */
 	public ResponseEntity<String> valideEstoque(ArticlesPurchase articlesPurchase) {
 		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
 		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
