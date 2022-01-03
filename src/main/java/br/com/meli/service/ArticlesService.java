@@ -155,7 +155,7 @@ public class ArticlesService {
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @description Valida JSON e cadastra produtos
+	 * @description cadastra produtos informados no payload
 	 * @param articles
 	 * @return ArticlesDTO
 	 */
@@ -163,24 +163,44 @@ public class ArticlesService {
 		if(articles.getArticles().size() == 0){
 			throw new ResponseEntityException("Não existe nenhum produto na lista", "400");
 		}
+		validaJsonCadastroProdutos(articles);
+		articlesRepository.serializaProdutos(articles.getArticles());
+		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+	}
+
+
+	/**
+	 * @author Thomaz Ferreira
+	 * @description Valida JSON de cadastro de produtos
+	 * @param articles
+	 * @return void
+	 */
+	private void validaJsonCadastroProdutos(Articles articles) {
+
+		ArrayList tmpId = new ArrayList();
 
 		for(Produto p : articles.getArticles()){
 			if(p.getProductId() == null || p.getProductId().equals(""))
-				throw new ResponseEntityException("O atributo productId não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo productId não foi informado ou é nulo", "400");
+
+			if(tmpId.contains(p.getProductId()))
+				throw new ResponseEntityException("Não é possível cadastrar mais de 1 produto com o mesmo Id", "400");
+			tmpId.add(p.getProductId());
+
 			if(p.getName() == null || p.getName().equals(""))
-				throw new ResponseEntityException("O atributo name não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo name não foi informado ou é nulo", "400");
 			if(p.getCategory() == null || p.getCategory().equals(""))
-				throw new ResponseEntityException("O atributo category não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo category não foi informado ou é nulo", "400");
 			if(p.getBrand() == null || p.getBrand().equals(""))
-				throw new ResponseEntityException("O atributo brand não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo brand não foi informado ou é nulo", "400");
 			if(p.getPrice() == null || p.getPrice().equals(""))
-				throw new ResponseEntityException("O atributo price não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo price não foi informado ou é nulo", "400");
 			if(p.getQuantity() == null || p.getQuantity().equals(""))
-				throw new ResponseEntityException("O atributo quantity não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo quantity não foi informado ou é nulo", "400");
 			if(p.getFreeShipping() == null)
-				throw new ResponseEntityException("O atributo freeShipping não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
 			if(p.getPrestige() == null || p.getPrestige().equals(""))
-				throw new ResponseEntityException("O atributo prestige não foi informado ou é nulo", "400");
+				throw new ResponseEntityException("O valor do atributo prestige não foi informado ou é nulo", "400");
 			else{
 				for(int i=0; i<p.getPrestige().length(); i++){
 					if(p.getPrestige().charAt(i) != '*')
@@ -188,8 +208,5 @@ public class ArticlesService {
 				}
 			}
 		}
-
-		this.salvarProdutos(articles);
-		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
 }
