@@ -6,12 +6,15 @@ import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Carrinho;
 import br.com.meli.entity.Produto;
+import br.com.meli.entity.Ticket;
 import br.com.meli.repository.ArticleRepository;
+import br.com.meli.response.PurchaseResponse;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 
 import exception.ResponseEntityException;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class ArticlesService {
@@ -58,6 +62,8 @@ public class ArticlesService {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
 		List<Produto> purchaseList = Carrinho.produtos;
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
+			if (a.getQuantity() <=0)
+				throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
 				.orElse(null);
 			if (produto == null) {
@@ -75,11 +81,11 @@ public class ArticlesService {
 			Produto produtoCarrinho = purchaseList.stream().filter(p -> p.getProductId().equals(produto.getProductId())).findAny()
 				.orElse(null);
 			if (produtoCarrinho == null) {
+				produto.setQuantity(a.getQuantity());
 				purchaseList.add(produto);
 			} else {
-				produtoCarrinho.setQuantity(produtoCarrinho.getQuantity() + produto.getQuantity());
+				produtoCarrinho.setQuantity(produtoCarrinho.getQuantity() + a.getQuantity());
 			}
-
 		}
 		return purchaseList;
 	}
@@ -131,6 +137,7 @@ public class ArticlesService {
 		 */
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
+
 				listaProdutos = OrdenadorProdutos.odernarProdutos(
 					listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
@@ -160,7 +167,6 @@ public class ArticlesService {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
 				listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
 		}
-
 		return listaProdutos;
 	}
 
@@ -207,6 +213,8 @@ public class ArticlesService {
 				throw new ResponseEntityException("O valor do atributo price não foi informado ou é nulo", "400");
 			if (p.getQuantity() == null || p.getQuantity().equals(""))
 				throw new ResponseEntityException("O valor do atributo quantity não foi informado ou é nulo", "400");
+			if (p.getQuantity() <= 0)
+				throw new ResponseEntityException("A quantidade a ser cadastrada deve ser maior que 0", "400");
 			if (p.getFreeShipping() == null)
 				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
 			if (p.getPrestige() == null || p.getPrestige().equals(""))
@@ -218,5 +226,44 @@ public class ArticlesService {
 				}
 			}
 		}
+	}
+
+	public ResponseEntity<PurchaseResponse> adicionaCarrinho( ArticlesPurchase articlesPurchaseList , URI uri){
+		List<Produto> articles = this.retornarProdutosPurchase(articlesPurchaseList);
+		this.validaEstoque(articlesPurchaseList);
+		BigDecimal total = this.retornarTotalPurchase(articles);
+		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
+		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
+
+	}
+
+
+	/**
+	 * @Author: Francisco Alves , Thomaz Ferreira
+	 * @Description Metodo que faz o controle de estoque
+	 */
+	public void validaEstoque(ArticlesPurchase articlesPurchase) {
+		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
+		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
+
+		for (ArticlesPurchaseDTO dto : articlesPurchase.getArticlesPurchaseRequest()) {
+			listaArticlesPuschase.add(dto);
+		}
+
+		for (Produto p : produtos) {
+			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
+				if (apd.getQuantity()<=0)
+					throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
+				if (p.getProductId() == apd.getProductId()) {
+					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() >0) {
+						p.setQuantity(p.getQuantity() - apd.getQuantity());
+						break;
+					} else {
+						throw new ResponseEntityException("Quantidade indisponivel","400");
+					}
+				}
+			}
+		}
+		articlesRepository.serializaProdutos(produtos);
 	}
 }

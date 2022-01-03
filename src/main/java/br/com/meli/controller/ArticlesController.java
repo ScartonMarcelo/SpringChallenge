@@ -1,6 +1,7 @@
 package br.com.meli.controller;
 
 import br.com.meli.dto.ArticlesDTO;
+import br.com.meli.dto.ArticlesPurchaseDTO;
 import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
@@ -46,7 +47,6 @@ public class ArticlesController {
 	 * @param uriBuilder
 	 * @return ArticlesDTO
 	 */
-
 	@PostMapping("/insert-articles-request")
 	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
 			UriComponentsBuilder uriBuilder) {
@@ -64,12 +64,9 @@ public class ArticlesController {
 
 	@PostMapping("/purchase-request")
 	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
-			UriComponentsBuilder uriBuilder) {
+																UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		List<Produto> articles = articlesService.retornarProdutosPurchase(articlesPurchaseList);
-		BigDecimal total = articlesService.retornarTotalPurchase(articles);
-		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
-		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
+		return  articlesService.adicionaCarrinho(articlesPurchaseList ,uri);
 	}
 
 	/**
