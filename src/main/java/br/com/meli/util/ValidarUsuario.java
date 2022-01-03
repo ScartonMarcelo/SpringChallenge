@@ -13,7 +13,7 @@ public class ValidarUsuario {
 	ClientesRepository clientesRepository;
 
 	public void isEmailTaken(String email) {
-		Boolean isEmailTaken = clientesRepository.listaClientes().stream()
+		Boolean isEmailTaken = clientesRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
 				.findFirst().isPresent();
 

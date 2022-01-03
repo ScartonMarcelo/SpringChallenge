@@ -18,7 +18,7 @@ public class ClientesRepository {
 		clientes.remove(cliente);
 	}
 
-	public List<Cliente> listaClientes() {
+	public List<Cliente> getAll() {
 		return clientes;
 	}
 }

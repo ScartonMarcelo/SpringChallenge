@@ -12,13 +12,15 @@ import lombok.Data;
 public class Cliente {
 	private final String name;
 	private String email;
+	private String estado;
 	private String password;
 	private final UUID id;
 	private StatusClient status;
 
-	public Cliente(String name, String email) {
+	public Cliente(String name, String email, String estado) {
 		this.id = UUID.randomUUID();
 		this.name = name;
+		this.estado = estado;
 		this.email = email;
 		this.status = StatusClient.INACTIVE;
 	}

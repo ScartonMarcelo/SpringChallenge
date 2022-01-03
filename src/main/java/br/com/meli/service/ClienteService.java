@@ -24,9 +24,11 @@ public class ClienteService {
 
 	public ClienteDTO cadastraCliente(ClienteDTO clienteDTO) {
 		validarUsuario.isEmailValid(clienteDTO.getEmail());
+		validarUsuario.isEmailTaken(clienteDTO.getEmail());
 		validarUsuario.isNameValid(clienteDTO.getName());
 
-		clienteRepository.save(new Cliente(clienteDTO.getName(), clienteDTO.getEmail()));
+		clienteRepository.save(new Cliente(clienteDTO.getName(),
+				clienteDTO.getEmail(), clienteDTO.getEstado()));
 		clienteDTO.setStatus(StatusClient.ACTIVE);
 
 		return clienteDTO;
@@ -34,7 +36,7 @@ public class ClienteService {
 
 	public StatusClient buscaCliente(String email) {
 		validarUsuario.isEmailValid(email);
-		return clienteRepository.listaClientes().stream()
+		return clienteRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
 				.findFirst()
 				.map(Cliente::getStatus)
@@ -43,7 +45,7 @@ public class ClienteService {
 
 	public Cliente buscaAdminCliente(String email) {
 		validarUsuario.isEmailValid(email);
-		return clienteRepository.listaClientes().stream()
+		return clienteRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
 				.findFirst()
 				.orElse(null); // TODO: implement orElseThrow(error)
@@ -51,11 +53,11 @@ public class ClienteService {
 
 	public List<ClienteDTO> listaClientes() {
 		// Deve ser rota Admin
-		if (clienteRepository.listaClientes().isEmpty()) {
+		if (clienteRepository.getAll().isEmpty()) {
 			throw new ResponseEntityException("Não existe usuários no sistema", "400");
 		}
 
-		return clienteRepository.listaClientes().stream()
+		return clienteRepository.getAll().stream()
 				.map(ClienteDTO::converteToDTO)
 				.collect(Collectors.toList());
 	}
@@ -76,9 +78,20 @@ public class ClienteService {
 		return ClienteDTO.converteToDTO(c);
 	}
 
+	public List<Cliente> filteredByState(String state) {
+		List<Cliente> result = clienteRepository.getAll().stream()
+				.filter(c -> c.getEstado().equalsIgnoreCase(state))
+				.collect(Collectors.toList());
+
+		if (result.size() == 0)
+			throw new ResponseEntityException(String.format("A pesquisa pelo valor %s retornou nula", state), "404");
+		else
+			return result;
+	}
+
 	// TODO: implement route for session + cart
 	public String sessionCliente(String email, String password) {
-		Optional<Cliente> clienteAuth = clienteRepository.listaClientes().stream()
+		Optional<Cliente> clienteAuth = clienteRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
 				.filter(c -> c.getPassword().equals(password))
 				.findFirst();

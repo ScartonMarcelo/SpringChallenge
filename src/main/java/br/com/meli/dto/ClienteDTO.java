@@ -10,12 +10,14 @@ import lombok.Data;
 public class ClienteDTO {
 	private String name;
 	private String email;
+	private String estado;
 	private StatusClient status;
 
 	public static ClienteDTO converteToDTO(Cliente c) {
 		return new ClienteDTO(
 				c.getName(),
 				c.getEmail(),
+				c.getEstado(),
 				c.getStatus());
 	}
 
