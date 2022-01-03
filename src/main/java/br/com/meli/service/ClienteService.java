@@ -22,6 +22,13 @@ public class ClienteService {
 	@Autowired
 	private ValidarUsuario validarUsuario;
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param clienteDTO
+	 * @return ClienteDTO
+	 */
 	public ClienteDTO cadastraCliente(ClienteDTO clienteDTO) {
 		validarUsuario.isEmailValid(clienteDTO.getEmail());
 		validarUsuario.isEmailTaken(clienteDTO.getEmail());
@@ -34,6 +41,13 @@ public class ClienteService {
 		return clienteDTO;
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 * @return StatusClient
+	 */
 	public StatusClient buscaCliente(String email) {
 		validarUsuario.isEmailValid(email);
 		return clienteRepository.getAll().stream()
@@ -43,6 +57,13 @@ public class ClienteService {
 				.orElse(null); // TODO: implement orElseThrow(error)
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 * @return CLiente
+	 */
 	public Cliente buscaAdminCliente(String email) {
 		validarUsuario.isEmailValid(email);
 		return clienteRepository.getAll().stream()
@@ -51,6 +72,12 @@ public class ClienteService {
 				.orElse(null); // TODO: implement orElseThrow(error)
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @return List
+	 */
 	public List<ClienteDTO> listaClientes() {
 		// Deve ser rota Admin
 		if (clienteRepository.getAll().isEmpty()) {
@@ -62,6 +89,15 @@ public class ClienteService {
 				.collect(Collectors.toList());
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 * @param emailChange
+	 * @param password
+	 * @return CLienteDTO
+	 */
 	public ClienteDTO mudaAtributo(String email, String emailChange, String password) {
 		Cliente c = this.buscaAdminCliente(email);
 		validarUsuario.isRegistered(c);
@@ -78,6 +114,13 @@ public class ClienteService {
 		return ClienteDTO.converteToDTO(c);
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param state
+	 * @return List
+	 */
 	public List<Cliente> filteredByState(String state) {
 		List<Cliente> result = clienteRepository.getAll().stream()
 				.filter(c -> c.getEstado().equalsIgnoreCase(state))
@@ -89,6 +132,14 @@ public class ClienteService {
 			return result;
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 * @param password
+	 * @return String
+	 */
 	// TODO: implement route for session + cart
 	public String sessionCliente(String email, String password) {
 		Optional<Cliente> clienteAuth = clienteRepository.getAll().stream()

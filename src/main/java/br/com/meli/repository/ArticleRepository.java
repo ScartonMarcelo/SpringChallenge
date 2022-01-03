@@ -3,6 +3,7 @@ package br.com.meli.repository;
 import br.com.meli.entity.Produto;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import exception.ResponseEntityException;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -15,17 +16,25 @@ public class ArticleRepository {
 
 	private final String JSON_FILE_NAME = "produtos.json";
 
-	// Serializa produtos em JSON
+	/**
+	 * @author
+	 * ESCRIÇÃO AQUI
+	 * @param produtos
+	 */
 	public void serializaProdutos(List<Produto> produtos) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.writeValue(new File(JSON_FILE_NAME), produtos);
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			throw new ResponseEntityException("Erro ao criar arquivo JSON", e.getMessage(), "400");
 		}
 	}
 
-	// Desserializa Produtos do carrinho
+	/**
+	 * @author
+	 * DESCRIÇÃO AQUI
+	 * @return List
+	 */
 	public List<Produto> desserializaProdutos() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -38,7 +47,7 @@ public class ArticleRepository {
 								List.class, Produto.class));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new ResponseEntityException("Erro ao recuperar dados do JSON", e.getMessage(), "400");
 		}
 		return listaProdutos;
 	}

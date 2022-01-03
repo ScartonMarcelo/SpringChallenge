@@ -26,11 +26,25 @@ public class ClientController {
 	@Autowired
 	private ClienteService clienteService;
 
+
+	/**
+	 * @author André Arroxellas
+	 * //DESCRIÇÃO AQUI
+	 * @return ResponseEntity
+	 */
 	@GetMapping("/users")
 	private ResponseEntity<List<ClienteDTO>> listaClientes() {
 		return ResponseEntity.ok().body(clienteService.listaClientes());
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * //DESCRIÇÃO AQUI
+	 * @param clienteDTO
+	 * @param uriBuilder
+	 * @return ResponseEntity
+	 */
 	@PostMapping("/users/register")
 	private ResponseEntity<ClienteDTO> cadastraCliente(@RequestBody ClienteDTO clienteDTO,
 			UriComponentsBuilder uriBuilder) {
@@ -38,12 +52,27 @@ public class ClientController {
 		return ResponseEntity.created(uri).body(clienteService.cadastraCliente(clienteDTO));
 	}
 
+
+	/**
+	 * @author André Arroxelas
+	 * //DESCRIÇÃO AQUI
+	 * @param email
+	 * @return ResponseEntity
+	 */
 	@GetMapping("/user")
 	private ResponseEntity<StatusClient> buscaStatusCliente(
 			@RequestParam(value = "email", required = false) String email) {
 		return ResponseEntity.ok().body(clienteService.buscaCliente(email));
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * //DESCRIÇÃO AQUI
+	 * @param email
+	 * @param password
+	 * @return ResponseEntity
+	 */
 	@PatchMapping("/user/session")
 	private ResponseEntity<String> sessionCliente(
 			@RequestParam(value = "email", required = true) String email,
@@ -51,6 +80,15 @@ public class ClientController {
 		return ResponseEntity.ok().body(clienteService.sessionCliente(email, password));
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * //DESCRIÇÃO AQUI
+	 * @param email
+	 * @param emailChange
+	 * @param password
+	 * @return ResponseEntity
+	 */
 	@GetMapping("/user/attributes")
 	private ResponseEntity<ClienteDTO> mudaAtributo(
 			@RequestParam(value = "email", required = true) String email,
@@ -59,10 +97,16 @@ public class ClientController {
 		return ResponseEntity.ok().body(clienteService.mudaAtributo(email, emailChange, password));
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * //DESCRIÇÃO AQUI
+	 * @param email
+	 * @return ResponseEntity
+	 */
 	@GetMapping(value = "/admin")
 	private ResponseEntity<Cliente> buscaCliente(
 			@RequestParam(value = "email", required = false) String email) {
 		return ResponseEntity.ok().body(clienteService.buscaAdminCliente(email));
 	}
-
 }

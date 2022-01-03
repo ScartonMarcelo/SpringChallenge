@@ -10,14 +10,31 @@ import java.util.List;
 public class ClientesRepository {
 	private List<Cliente> clientes = new ArrayList<>();
 
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param cliente
+	 */
 	public void save(Cliente cliente) {
 		clientes.add(cliente);
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param cliente
+	 */
 	public void delete(Cliente cliente) {
 		clientes.remove(cliente);
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @return List
+	 */
 	public List<Cliente> getAll() {
 		return clientes;
 	}

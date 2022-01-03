@@ -1,15 +1,12 @@
 package br.com.meli.controller;
 
 import br.com.meli.dto.ArticlesDTO;
-import br.com.meli.dto.ArticlesPurchaseDTO;
 import br.com.meli.dto.ProdutoDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
-import br.com.meli.entity.Ticket;
 import br.com.meli.service.ArticlesService;
 import br.com.meli.response.PurchaseResponse;
-import br.com.meli.service.ProdutoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,51 +29,44 @@ public class ArticlesController {
 	@Autowired
 	private ArticlesService articlesService;
 
-	@Autowired
-	private ProdutoService produtoService;
-
-	List<Produto> produtos = new ArrayList<Produto>();
 
 	/**
-	 * Author: Thomaz Ferreira
-	 *
-	 * @Description Rota para cadastrar produtos
+	 * @author Thomaz Ferreira
+	 * Rota para cadastrar produtos
 	 * @param articles
 	 * @param uriBuilder
 	 * @return ArticlesDTO
 	 */
 	@PostMapping("/insert-articles-request")
-	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles,
-			UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<ArticlesDTO> cadastraProduto(@RequestBody Articles articles, UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return articlesService.cadastraProdutos(articles, uri);
 	}
+
 
 	/**
 	 * @param articlesPurchaseList
 	 * @param uriBuilder
 	 * @return ResponseEntity<PurchaseResponse>
-	 * @Author Marcelo Scarton
-	 * @description Endpoint responsavel pelo envio de pedido de compra
+	 * @author Marcelo Scarton
+	 * Endpoint responsavel pelo envio de pedido de compra
 	 */
-
 	@PostMapping("/purchase-request")
-	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
-																UriComponentsBuilder uriBuilder) {
+	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList, UriComponentsBuilder uriBuilder) {
 		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
 		return  articlesService.adicionaCarrinho(articlesPurchaseList ,uri);
 	}
 
+
 	/**
-	 * Author: André Arroxellas , Francisco Alves , Thomaz Ferreira
-	 *
+	 * @author André Arroxellas , Francisco Alves , Thomaz Ferreira
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @return ResponseEntity<List < ProdutoDTO>>
-	 * @Description Rota para pesquisa em query de produtos
+	 * @return ResponseEntity
+	 * Rota para pesquisa em query de produtos
 	 */
 	@GetMapping("/articles")
 	private ResponseEntity<List<ProdutoDTO>> getListaProdutosFiltradoOrdenado(

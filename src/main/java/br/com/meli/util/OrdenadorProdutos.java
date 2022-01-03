@@ -10,21 +10,42 @@ import exception.ResponseEntityException;
 
 /**
  * @author André Arroxellas
- * @description métodos de ordenação e filtro
+ * métodos de ordenação e filtro
  */
 public class OrdenadorProdutos {
+
+	/**
+	 * @author André Arroxellas
+	 * DESCRIÇÃO AQUI
+	 * @param listaProdutos
+	 * @param comparator
+	 * @return List
+	 */
 	static List<Produto> ordenaPorAtributo(List<Produto> listaProdutos, Comparator<Produto> comparator) {
 		return listaProdutos.stream()
 				.sorted(comparator)
 				.collect(Collectors.toList());
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * DESCRIÇÃO AQUI
+	 * @param listaProdutos
+	 * @param selector
+	 * @return List
+	 */
 	static List<Produto> filtraPorAtributo(List<Produto> listaProdutos, Predicate<Produto> selector) {
 		return listaProdutos.stream()
 				.filter(selector)
 				.collect(Collectors.toList());
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * DESCRIÇÃO AQUI
+	 */
 	public enum Ordenador {
 		ORDENA_ALFABETICAMENTE_CRESCENTE(0),
 		ORDENA_ALFABETICAMENTE_DECRESCENTE(1),
@@ -60,6 +81,14 @@ public class OrdenadorProdutos {
 		}
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * DESCRIÇÃO AQUI
+	 * @param listaProdutos
+	 * @param ordenador
+	 * @return List
+	 */
 	public static List<Produto> odernarProdutos(List<Produto> listaProdutos, Ordenador ordenador) {
 		switch (ordenador) {
 			case ORDENA_ALFABETICAMENTE_CRESCENTE:
@@ -79,6 +108,15 @@ public class OrdenadorProdutos {
 		}
 	}
 
+
+	/**
+	 * @author André Arroxellas
+	 * DESCRIÇÃO AQUI
+	 * @param listaProdutos
+	 * @param atributoString
+	 * @param filtro
+	 * @return List
+	 */
 	public static List<Produto> filtrarProdutos(List<Produto> listaProdutos, String atributoString,
 			Filtro filtro) {
 		switch (filtro) {
@@ -99,5 +137,4 @@ public class OrdenadorProdutos {
 				throw new ResponseEntityException("Internal System Error", "500");
 		}
 	}
-
 }

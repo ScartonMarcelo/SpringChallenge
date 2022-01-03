@@ -14,7 +14,7 @@ public final class ResponseEntityException extends RuntimeException{
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @description Método construtor da função de exception
+	 * Método construtor da função de exception
 	 * @param msg
 	 * @param statusCode
 	 */
@@ -26,7 +26,7 @@ public final class ResponseEntityException extends RuntimeException{
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @description Overload método construtor da função de exception
+	 * Overload método construtor da função de exception
 	 * @param msg
 	 * @param exception
 	 * @param statusCode

@@ -18,9 +18,9 @@ public class ArticlesDTO {
 	private List<ProdutoDTO> articlesDTO = new ArrayList<>();
 
 	/**
-	 * @Author Thomaz Ferreira
-	 * @Description Converte objeto Articles em ArticlesDTO
-	 * @param Articles article
+	 * @author Thomaz Ferreira
+	 * Converte objeto Articles em ArticlesDTO
+	 * @param article
 	 * @return ArticlesDTO
 	 */
 	public static ArticlesDTO converte(Articles article) {
@@ -31,9 +31,9 @@ public class ArticlesDTO {
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @Description Converte objeto ArticleDTO em Article
-	 * @param Articles article
-	 * @return ArticlesDTO
+	 * Converte objeto ArticleDTO em Article
+	 * @param dto
+	 * @return Articles
 	 */
 	public static Articles converte(ArticlesDTO dto) {
 		return Articles.builder()

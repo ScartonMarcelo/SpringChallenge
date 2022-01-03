@@ -12,16 +12,13 @@ public class ResponseEntityErrorsUtils {
 
 	/**
 	 * @author Thomaz Ferreira
-	 * @description Retorna ResponseEntity correspondente ao statusCode de erro
-	 *              informado
+	 * Retorna ResponseEntity correspondente ao statusCode de erro informado
 	 * @param exceptionMsg
 	 * @param statusCode
 	 * @return ResponseEntity
 	 */
 	public ResponseEntity<?> responseEntityFactory(String exceptionMsg, String statusCode) {
-
 		objectResponse.put("mensagem", exceptionMsg);
-
 		if (statusCode.equals("400")) {
 			objectResponse.put("statusCode", Integer.toString(HttpStatus.BAD_REQUEST.value()));
 			return ResponseEntity.badRequest().body(objectResponse);
@@ -34,19 +31,17 @@ public class ResponseEntityErrorsUtils {
 		}
 	}
 
+
 	/**
 	 * @author Thomaz Ferreira
-	 * @description Retorna ResponseEntity correspondente ao statusCode de erro
-	 *              informado
+	 * Retorna ResponseEntity correspondente ao statusCode de erro informado
 	 * @param exceptionMsg
 	 * @param statusCode
 	 * @return ResponseEntity
 	 */
 	public ResponseEntity<?> responseEntityFactory(String customMsg, String exceptionMsg, String statusCode) {
-
 		objectResponse.put("mensagem", customMsg);
 		objectResponse.put("exception", exceptionMsg);
-
 		if (statusCode.equals("400")) {
 			objectResponse.put("statusCode", Integer.toString(HttpStatus.BAD_REQUEST.value()));
 			return ResponseEntity.badRequest().body(objectResponse);
