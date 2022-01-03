@@ -25,7 +25,6 @@ public class ArticleRepository {
 		}
 	}
 
-
 	// Desserializa Produtos do carrinho
 	public List<Produto> desserializaProdutos() {
 		ObjectMapper mapper = new ObjectMapper();
@@ -35,8 +34,8 @@ public class ArticleRepository {
 			File file = new File(JSON_FILE_NAME);
 			if (file.exists()) {
 				listaProdutos = mapper.readValue(file,
-					mapper.getTypeFactory().constructCollectionType(
-						List.class, Produto.class));
+						mapper.getTypeFactory().constructCollectionType(
+								List.class, Produto.class));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
