@@ -10,6 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Articles {
-	@NonNull
 	private List<Produto> articles = new ArrayList<>();
 }

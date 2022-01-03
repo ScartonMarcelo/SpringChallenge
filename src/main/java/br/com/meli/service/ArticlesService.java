@@ -32,11 +32,11 @@ public class ArticlesService {
 	@Autowired
 	private ArticleRepository articlesRepository;
 
+
 	/**
-	 * @param articles
-	 * @return void
 	 * @author ?????
-	 * @description Chama função para serializar Produtos em JSON
+	 * Chama função para serializar Produtos em JSON
+	 * @param articles
 	 */
 	public void salvarProdutos(Articles articles) {
 		List<Produto> novosProdutos = articles.getArticles();
@@ -52,13 +52,14 @@ public class ArticlesService {
 		articlesRepository.serializaProdutos(produtosExistentes);
 	}
 
+
 	/**
+	 * @author Marcelo Scarton
+	 * Retorna lista de Produtos solicitados para compra
 	 * @param articlesPurchaseList
 	 * @return List
-	 * @author Marcelo Scarton
-	 * @description Retorna lista de Produtos solicitados para compra
 	 */
-	public List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
+	private List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
 		List<Produto> purchaseList = Carrinho.produtos;
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
@@ -90,13 +91,14 @@ public class ArticlesService {
 		return purchaseList;
 	}
 
+
 	/**
+	 * @author Marcelo Scarton
+	 * Retorna valor total da lista de Produtos solicitados para compra
 	 * @param articles
 	 * @return BigDecimal
-	 * @author Marcelo Scarton
-	 * @description Retorna valor total da lista de Produtos solicitados para compra
 	 */
-	public BigDecimal retornarTotalPurchase(List<Produto> articles) {
+	private BigDecimal retornarTotalPurchase(List<Produto> articles) {
 		BigDecimal total = new BigDecimal("0");
 		for (Produto p : articles) {
 			total = total.add(p.getPrice().multiply(BigDecimal.valueOf(p.getQuantity())));
@@ -104,25 +106,26 @@ public class ArticlesService {
 		return total;
 	}
 
+
 	/**
-	 * @return List
 	 * @author Francisco Alves
-	 * @description Retorna todos os produtos cadastrados
+	 * Retorna todos os produtos cadastrados
+	 * @return List
 	 */
 	public List<Produto> getProdutos() {
 		return articlesRepository.desserializaProdutos();
 	}
 
+
 	/**
-	 * Author: André Arroxellas
-	 *
+	 * @author André Arroxellas
+	 * Condicionais para filtros & ordenadores
 	 * @param categoryName
 	 * @param productName
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
 	 * @return List<Produto>
-	 * @Description Condicionais para filtros & ordenadores
 	 * @see OrdenadorProdutos
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
@@ -170,11 +173,13 @@ public class ArticlesService {
 		return listaProdutos;
 	}
 
+
 	/**
-	 * @param articles
-	 * @return ArticlesDTO
 	 * @author Thomaz Ferreira
-	 * @description cadastra produtos informados no payload
+	 * Cadastra produtos informados no payload
+	 * @param articles
+	 * @param uri
+	 * @return ResponseEntity
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
 		if (articles.getArticles().size() == 0) {
@@ -186,10 +191,9 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @param articles
-	 * @return void
 	 * @author Thomaz Ferreira
-	 * @description Valida JSON de cadastro de produtos
+	 * Valida JSON de cadastro de produtos
+	 * @param articles
 	 */
 	private void validaJsonCadastroProdutos(Articles articles) {
 
@@ -228,21 +232,28 @@ public class ArticlesService {
 		}
 	}
 
+	/**
+	 * @author Marcelo Scarton, Francisco Alves
+	 * DESCRIÇÃO AQUI
+	 * @param articlesPurchaseList
+	 * @param uri
+	 * @return ResponseEntity
+	 */
 	public ResponseEntity<PurchaseResponse> adicionaCarrinho( ArticlesPurchase articlesPurchaseList , URI uri){
 		List<Produto> articles = this.retornarProdutosPurchase(articlesPurchaseList);
 		this.validaEstoque(articlesPurchaseList);
 		BigDecimal total = this.retornarTotalPurchase(articles);
 		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
 		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
-
 	}
 
 
 	/**
-	 * @Author: Francisco Alves , Thomaz Ferreira
-	 * @Description Metodo que faz o controle de estoque
+	 * @author Francisco Alves , Thomaz Ferreira
+	 * Metodo que faz o controle e validação de estoque
+	 * @param articlesPurchase
 	 */
-	public void validaEstoque(ArticlesPurchase articlesPurchase) {
+	private void validaEstoque(ArticlesPurchase articlesPurchase) {
 		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
 		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
 
@@ -254,7 +265,7 @@ public class ArticlesService {
 			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
 				if (apd.getQuantity()<=0)
 					throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
-				if (p.getProductId() == apd.getProductId()) {
+				if (p.getProductId().equals(apd.getProductId())) {
 					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() >0) {
 						p.setQuantity(p.getQuantity() - apd.getQuantity());
 						break;

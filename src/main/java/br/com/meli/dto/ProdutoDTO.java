@@ -19,12 +19,6 @@ import br.com.meli.entity.Produto;
 @AllArgsConstructor
 public class ProdutoDTO {
 
-	/**
-	 * @Author Thomaz Ferreira, Thiago Henrique, Francisco Alves, Marcelo Scarton,
-	 *         André Arroxellas
-	 * @Description Model Produto DTO
-	 */
-
 	private Long productId;
 	private String name;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -39,13 +33,13 @@ public class ProdutoDTO {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String prestige;
 
+
 	/**
-	 * @Author Thomaz Ferreira
-	 * @Description Converte obejto ProdutoDTO em Produto
-	 * @param ProdutoDTO dto
+	 * @author Thomaz Ferreira
+	 * Converte obejto ProdutoDTO em Produto
+	 * @param dto
 	 * @return Produto
 	 */
-
 	public static Produto converte(ProdutoDTO dto) {
 		return Produto.builder()
 				.productId(dto.getProductId())
@@ -59,10 +53,11 @@ public class ProdutoDTO {
 				.build();
 	}
 
+
 	/**
-	 * @Author Thomaz Ferreira
-	 * @Description Converte obejto Produto em ProdutoDTO
-	 * @param Produto p
+	 * @author Thomaz Ferreira
+	 * Converte obejto Produto em ProdutoDTO
+	 * @param p
 	 * @return ProdutoDTO
 	 */
 	public static ProdutoDTO converte(Produto p) {
@@ -78,12 +73,12 @@ public class ProdutoDTO {
 				.build();
 	}
 
+
 	/**
 	 * @author Thomaz Ferreira
-	 * @Description Converte lista de objetos Produtos em uma lista de objetos
-	 *              ProdutoDTO
-	 * @param Articles articles
-	 * @return List lista
+	 * Converte lista de objetos Produtos em uma lista de objetos ProdutoDTO
+	 * @param articles
+	 * @return List
 	 */
 	public static List<ProdutoDTO> converteLista(Articles articles) {
 		List<ProdutoDTO> lista = new ArrayList<ProdutoDTO>();
@@ -93,12 +88,12 @@ public class ProdutoDTO {
 		return lista;
 	}
 
+
 	/**
 	 * @author Thomaz Ferreira
-	 * @Description Converte lista de objetos ProdutoDTO em uma lista de objetos
-	 *              Produto
-	 * @param Articles articles
-	 * @return List lista
+	 * Converte lista de objetos ProdutoDTO em uma lista de objetos Produto
+	 * @param articles
+	 * @return List
 	 */
 	public static List<Produto> converteLista(ArticlesDTO articles) {
 		List<Produto> lista = new ArrayList<Produto>();

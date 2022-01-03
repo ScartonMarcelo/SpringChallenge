@@ -20,7 +20,4 @@ public class ClienteDTO {
 				c.getEstado(),
 				c.getStatus());
 	}
-
-	public ClienteDTO() {
-	}
 }

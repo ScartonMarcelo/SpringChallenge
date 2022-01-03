@@ -16,10 +16,10 @@ public class ProdutoService {
 	private ArticleRepository articleRepository;
 
 	/**
-	 * @Author Thiago Campos
-	 * @Description Recupera a lsita completa de produtos e filtra por categoria
+	 * @author Thiago Campos
+	 * Recupera a lsita completa de produtos e filtra por categoria
 	 * @param  categoryName
-	 * @return List<Produto>
+	 * @return List
 	 */
 	public List<Produto> filterByCategory(String categoryName) {
 		List<Produto> products = articleRepository.desserializaProdutos()

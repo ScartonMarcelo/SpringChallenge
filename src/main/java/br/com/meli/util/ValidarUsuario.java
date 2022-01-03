@@ -12,6 +12,12 @@ public class ValidarUsuario {
 	@Autowired
 	ClientesRepository clientesRepository;
 
+
+	/**
+	 * @author ??
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 */
 	public void isEmailTaken(String email) {
 		Boolean isEmailTaken = clientesRepository.getAll().stream()
 				.filter(c -> c.getEmail().equals(email))
@@ -22,6 +28,12 @@ public class ValidarUsuario {
 		}
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param email
+	 */
 	public void isEmailValid(String email) {
 		if (email == null) {
 			throw new ResponseEntityException("Email nulo: " + email, "400");
@@ -33,18 +45,36 @@ public class ValidarUsuario {
 		}
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param name
+	 */
 	public void isNameValid(String name) {
 		if (name == null || name.trim() == "") {
 			throw new ResponseEntityException("Nome não informado: " + name, "400");
 		}
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param password
+	 */
 	public void isPasswordValid(String password) {
 		if (password == null || password.trim().equals("")) {
 			throw new ResponseEntityException("Password não informado: " + password, "400");
 		}
 	}
 
+
+	/**
+	 * @author ???
+	 * DESCRIÇÃO AQUI
+	 * @param c
+	 */
 	public void isRegistered(Cliente c) {
 		if (c == null) {
 			throw new ResponseEntityException("Email não registrado no sistema", "400");
