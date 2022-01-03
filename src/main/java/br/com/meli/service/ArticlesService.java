@@ -5,12 +5,15 @@ import br.com.meli.dto.ArticlesPurchaseDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
 import br.com.meli.entity.Produto;
+import br.com.meli.entity.Ticket;
 import br.com.meli.repository.ArticleRepository;
+import br.com.meli.response.PurchaseResponse;
 import br.com.meli.util.OrdenadorProdutos;
 import br.com.meli.util.OrdenadorProdutos.Filtro;
 import br.com.meli.util.OrdenadorProdutos.Ordenador;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 
 import exception.ResponseEntityException;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class ArticlesService {
@@ -70,6 +74,7 @@ public class ArticlesService {
 					"400");
 
 			}
+			produto.setQuantity(a.getQuantity());
 			purchaseList.add(produto);
 		}
 		return purchaseList;
@@ -202,7 +207,7 @@ public class ArticlesService {
 				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
 			if (p.getPrestige() == null || p.getPrestige().equals(""))
 				throw new ResponseEntityException("O valor do atributo prestige não foi informado ou é nulo", "400");
-			else{
+			else {
 				for (int i = 0; i < p.getPrestige().length(); i++) {
 					if (p.getPrestige().charAt(i) != '*')
 						throw new ResponseEntityException("O atributo prestige deve aceitar apenas *", "400");
@@ -211,11 +216,21 @@ public class ArticlesService {
 		}
 	}
 
+	public ResponseEntity<PurchaseResponse> adicionaCarrinho( ArticlesPurchase articlesPurchaseList , URI uri){
+		List<Produto> articles = this.retornarProdutosPurchase(articlesPurchaseList);
+		this.validaEstoque(articlesPurchaseList);
+		BigDecimal total = this.retornarTotalPurchase(articles);
+		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
+		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
+
+	}
+
+
 	/**
 	 * @Author: Francisco Alves , Thomaz Ferreira
 	 * @Description Metodo que faz o controle de estoque
 	 */
-	public ResponseEntity<String> valideEstoque(ArticlesPurchase articlesPurchase) {
+	public void validaEstoque(ArticlesPurchase articlesPurchase) {
 		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
 		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
 
@@ -226,18 +241,15 @@ public class ArticlesService {
 		for (Produto p : produtos) {
 			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
 				if (p.getProductId() == apd.getProductId()) {
-					if (p.getQuantity() >= apd.getQuantity()) {
-						//TODO sobrecrever carrinho
+					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() >0) {
 						p.setQuantity(p.getQuantity() - apd.getQuantity());
 						break;
 					} else {
-						//TODO caso não tenha produto em estoque
-						return ResponseEntity.ok("Erro");
+						throw new ResponseEntityException("Quantidade indisponivel","400");
 					}
 				}
 			}
 		}
 		articlesRepository.serializaProdutos(produtos);
-		return null;
 	}
 }
