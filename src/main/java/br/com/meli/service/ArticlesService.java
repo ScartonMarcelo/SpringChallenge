@@ -4,6 +4,7 @@ import br.com.meli.dto.ArticlesDTO;
 import br.com.meli.dto.ArticlesPurchaseDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
+import br.com.meli.entity.Carrinho;
 import br.com.meli.entity.Produto;
 import br.com.meli.repository.ArticleRepository;
 import br.com.meli.util.OrdenadorProdutos;
@@ -38,7 +39,7 @@ public class ArticlesService {
 		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
 		for (Produto p : novosProdutos) {
 			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
-					.findAny().orElse(null);
+				.findAny().orElse(null);
 			if (produto != null) {
 				throw new ResponseEntityException("O produto com o id " + p.getProductId() + " já existe.", "400");
 			}
@@ -55,20 +56,30 @@ public class ArticlesService {
 	 */
 	public List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
-		List<Produto> purchaseList = new ArrayList<>();
+		List<Produto> purchaseList = Carrinho.produtos;
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
-					.orElse(null);
+				.orElse(null);
 			if (produto == null) {
 				throw new ResponseEntityException("O produto com o id " + a.getProductId() + " não existe.", "400");
 			}
+			if (!produto.getName().equalsIgnoreCase(a.getName())) {
+				throw new ResponseEntityException("O produto nome " + a.getName() + " não corresponde ao nome do produto com id " + produto.getProductId(), "400");
+			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new ResponseEntityException(
-						"Não há estoque suficiente para o produto " + a.getName() + ", " +
-								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
-						"400");
+					"Não há estoque suficiente para o produto " + a.getName() + ", " +
+						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
+					"400");
 			}
-			purchaseList.add(produto);
+			Produto produtoCarrinho = purchaseList.stream().filter(p -> p.getProductId().equals(produto.getProductId())).findAny()
+				.orElse(null);
+			if (produtoCarrinho == null) {
+				purchaseList.add(produto);
+			} else {
+				produtoCarrinho.setQuantity(produtoCarrinho.getQuantity() + produto.getQuantity());
+			}
+
 		}
 		return purchaseList;
 	}
@@ -104,13 +115,12 @@ public class ArticlesService {
 	 * @param brandName
 	 * @param freeShipping
 	 * @param orderFilter
-	 * @see OrdenadorProdutos
-	 *
 	 * @return List<Produto>
 	 * @Description Condicionais para filtros & ordenadores
+	 * @see OrdenadorProdutos
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
-			String brandName, Boolean freeShipping, Integer orderFilter) {
+										   String brandName, Boolean freeShipping, Integer orderFilter) {
 
 		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
 
@@ -122,7 +132,7 @@ public class ArticlesService {
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
 				listaProdutos = OrdenadorProdutos.odernarProdutos(
-						listaProdutos, Ordenador.values()[orderFilter]);
+					listaProdutos, Ordenador.values()[orderFilter]);
 			} else {
 				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
@@ -130,35 +140,35 @@ public class ArticlesService {
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
 				listaProdutos = OrdenadorProdutos.filtrarProdutos(
-						listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
+					listaProdutos, null, Filtro.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
 				listaProdutos = OrdenadorProdutos.filtrarProdutos(
-						listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
+					listaProdutos, null, Filtro.FILTRA_NON_FREE_SHIPPING);
 			} else {
 				throw new ResponseEntityException("param order aceita 0 a 3 como entrada", "400");
 			}
 		}
 		if (categoryName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-					listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
+				listaProdutos, categoryName.trim(), Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-					listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
+				listaProdutos, productName.trim(), Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
 			listaProdutos = OrdenadorProdutos.filtrarProdutos(
-					listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
+				listaProdutos, brandName.trim(), Filtro.FILTRA_BRAND_NAME);
 		}
 
 		return listaProdutos;
 	}
 
 	/**
-	 * @author Thomaz Ferreira
-	 * @description cadastra produtos informados no payload
 	 * @param articles
 	 * @return ArticlesDTO
+	 * @author Thomaz Ferreira
+	 * @description cadastra produtos informados no payload
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
 		if (articles.getArticles().size() == 0) {
@@ -170,10 +180,10 @@ public class ArticlesService {
 	}
 
 	/**
-	 * @author Thomaz Ferreira
-	 * @description Valida JSON de cadastro de produtos
 	 * @param articles
 	 * @return void
+	 * @author Thomaz Ferreira
+	 * @description Valida JSON de cadastro de produtos
 	 */
 	private void validaJsonCadastroProdutos(Articles articles) {
 
