@@ -192,7 +192,11 @@ public class ArticlesService {
 		this.salvarProdutos(articles);
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
 	}
-
+/**
+ * @Author: Francisco Alves , Thomaz Ferreira
+ * @Description Metodo que faz o controle de estoque
+ *
+*/
 	public ResponseEntity<String> valideEstoque(ArticlesPurchase articlesPurchase) {
 		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
 		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
