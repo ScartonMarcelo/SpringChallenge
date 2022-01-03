@@ -4,6 +4,7 @@ import br.com.meli.dto.ArticlesDTO;
 import br.com.meli.dto.ArticlesPurchaseDTO;
 import br.com.meli.entity.Articles;
 import br.com.meli.entity.ArticlesPurchase;
+import br.com.meli.entity.Carrinho;
 import br.com.meli.entity.Produto;
 import br.com.meli.entity.Ticket;
 import br.com.meli.repository.ArticleRepository;
@@ -59,23 +60,32 @@ public class ArticlesService {
 	 */
 	public List<Produto> retornarProdutosPurchase(ArticlesPurchase articlesPurchaseList) {
 		List<Produto> produtos = articlesRepository.desserializaProdutos();
-		List<Produto> purchaseList = new ArrayList<>();
+		List<Produto> purchaseList = Carrinho.produtos;
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
+			if (a.getQuantity() <=0)
+				throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
 				.orElse(null);
 			if (produto == null) {
 				throw new ResponseEntityException("O produto com o id " + a.getProductId() + " não existe.", "400");
 			}
+			if (!produto.getName().equalsIgnoreCase(a.getName())) {
+				throw new ResponseEntityException("O produto nome " + a.getName() + " não corresponde ao nome do produto com id " + produto.getProductId(), "400");
+			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new ResponseEntityException(
-
 					"Não há estoque suficiente para o produto " + a.getName() + ", " +
 						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).",
 					"400");
-
 			}
-			produto.setQuantity(a.getQuantity());
-			purchaseList.add(produto);
+			Produto produtoCarrinho = purchaseList.stream().filter(p -> p.getProductId().equals(produto.getProductId())).findAny()
+				.orElse(null);
+			if (produtoCarrinho == null) {
+				produto.setQuantity(a.getQuantity());
+				purchaseList.add(produto);
+			} else {
+				produtoCarrinho.setQuantity(produtoCarrinho.getQuantity() + a.getQuantity());
+			}
 		}
 		return purchaseList;
 	}
@@ -203,6 +213,8 @@ public class ArticlesService {
 				throw new ResponseEntityException("O valor do atributo price não foi informado ou é nulo", "400");
 			if (p.getQuantity() == null || p.getQuantity().equals(""))
 				throw new ResponseEntityException("O valor do atributo quantity não foi informado ou é nulo", "400");
+			if (p.getQuantity() <= 0)
+				throw new ResponseEntityException("A quantidade a ser cadastrada deve ser maior que 0", "400");
 			if (p.getFreeShipping() == null)
 				throw new ResponseEntityException("O valor do atributo freeShipping não foi informado ou é nulo", "400");
 			if (p.getPrestige() == null || p.getPrestige().equals(""))
@@ -240,6 +252,8 @@ public class ArticlesService {
 
 		for (Produto p : produtos) {
 			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
+				if (apd.getQuantity()<=0)
+					throw new ResponseEntityException("Quantidade a ser comprada deve ser maior que 0" ,"400");
 				if (p.getProductId() == apd.getProductId()) {
 					if (p.getQuantity() >= apd.getQuantity() && p.getQuantity() >0) {
 						p.setQuantity(p.getQuantity() - apd.getQuantity());
