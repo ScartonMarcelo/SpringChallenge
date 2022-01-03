@@ -59,13 +59,14 @@ public class ArticlesController {
 	 */
 
 	@PostMapping("/purchase-request")
-	private ResponseEntity<PurchaseResponse> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
+	private ResponseEntity<?> solicitarCompra(@RequestBody ArticlesPurchase articlesPurchaseList,
 			UriComponentsBuilder uriBuilder) {
-		URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
-		List<Produto> articles = articlesService.retornarProdutosPurchase(articlesPurchaseList);
-		BigDecimal total = articlesService.retornarTotalPurchase(articles);
-		Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
-		return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
+		return articlesService.valideEstoque(articlesPurchaseList);
+		//URI uri = uriBuilder.path("/api/v1/articles").build().toUri();
+		//List<Produto> articles = articlesService.retornarProdutosPurchase(articlesPurchaseList);
+		//BigDecimal total = articlesService.retornarTotalPurchase(articles);
+		//Ticket ticket = Ticket.builder().Id((long) 530).articles(articles).total(total).build();
+		//return ResponseEntity.created(uri).body(PurchaseResponse.builder().ticket(ticket).build());
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class ArticlesService {
 		List<Produto> produtosExistentes = articlesRepository.desserializaProdutos();
 		for (Produto p : novosProdutos) {
 			Produto produto = produtosExistentes.stream().filter(x -> x.getProductId().equals(p.getProductId()))
-					.findAny().orElse(null);
+				.findAny().orElse(null);
 			if (produto != null) {
 				throw new ResponseEntityException("O produto com o id " + p.getProductId() + " já existe.", "400");
 			}
@@ -64,14 +64,14 @@ public class ArticlesService {
 		List<Produto> purchaseList = new ArrayList<>();
 		for (ArticlesPurchaseDTO a : articlesPurchaseList.getArticlesPurchaseRequest()) {
 			Produto produto = produtos.stream().filter(p -> p.getProductId().equals(a.getProductId())).findAny()
-					.orElse(null);
+				.orElse(null);
 			if (produto == null) {
 				throw new ResponseEntityException("O produto com o id " + a.getProductId() + " não existe.", "400");
 			}
 			if (produto.getQuantity() < a.getQuantity()) {
 				throw new ResponseEntityException(
-						"Não há estoque suficiente para o produto " + a.getName() + ", " +
-								"a quantidade atual é de " + produto.getQuantity() + " unidades(s).", "400");
+					"Não há estoque suficiente para o produto " + a.getName() + ", " +
+						"a quantidade atual é de " + produto.getQuantity() + " unidades(s).", "400");
 			}
 			purchaseList.add(produto);
 		}
@@ -113,7 +113,7 @@ public class ArticlesService {
 	 * @Description Condicionais para filtros & ordenadores
 	 */
 	public List<Produto> trateRequestQuery(String categoryName, String productName,
-			String brandName, Boolean freeShipping, Integer orderFilter) {
+										   String brandName, Boolean freeShipping, Integer orderFilter) {
 
 		List<Produto> listaProdutos = articlesRepository.desserializaProdutos();
 
@@ -122,7 +122,7 @@ public class ArticlesService {
 		if (orderFilter != null) {
 			if (orderFilter <= 3 && orderFilter >= 0) {
 				listaProdutos = ordenadorProdutos.odernarProdutos(
-						listaProdutos, null, Ordenador.values()[orderFilter]);
+					listaProdutos, null, Ordenador.values()[orderFilter]);
 			} else {
 				throw new IllegalArgumentException("Order não pode ser: " + orderFilter);
 			}
@@ -130,23 +130,23 @@ public class ArticlesService {
 		if (freeShipping != null) {
 			if (freeShipping.equals(true)) {
 				listaProdutos = ordenadorProdutos.filtrarShipping(
-						listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
+					listaProdutos, null, Shipping.FILTRA_FREE_SHIPPING);
 			} else if (freeShipping.equals(false)) {
 				listaProdutos = ordenadorProdutos.filtrarShipping(
-						listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
+					listaProdutos, null, Shipping.FILTRA_NON_FREE_SHIPPING);
 			}
 		}
 		if (categoryName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
+				listaProdutos, categoryName, Filtro.FILTRA_CATEGORY_NAME);
 		}
 		if (productName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
+				listaProdutos, productName, Filtro.FILTRA_PRODUCT_NAME);
 		}
 		if (brandName != null) {
 			listaProdutos = ordenadorProdutos.filtrarProdutos(
-					listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
+				listaProdutos, brandName, Filtro.FILTRA_BRAND_NAME);
 		}
 
 		return listaProdutos;
@@ -154,36 +154,36 @@ public class ArticlesService {
 
 
 	/**
-	 * @author Thomaz Ferreira
-	 * @description Valida JSON e cadastra produtos
 	 * @param articles
 	 * @return ArticlesDTO
+	 * @author Thomaz Ferreira
+	 * @description Valida JSON e cadastra produtos
 	 */
 	public ResponseEntity<ArticlesDTO> cadastraProdutos(Articles articles, URI uri) {
-		if(articles.getArticles().size() == 0){
+		if (articles.getArticles().size() == 0) {
 			throw new ResponseEntityException("Não existe nenhum produto na lista", "400");
 		}
 
-		for(Produto p : articles.getArticles()){
-			if(p.getProductId() == null || p.getProductId().equals(""))
+		for (Produto p : articles.getArticles()) {
+			if (p.getProductId() == null || p.getProductId().equals(""))
 				throw new ResponseEntityException("O atributo productId não foi informado ou é nulo", "400");
-			if(p.getName() == null || p.getName().equals(""))
+			if (p.getName() == null || p.getName().equals(""))
 				throw new ResponseEntityException("O atributo name não foi informado ou é nulo", "400");
-			if(p.getCategory() == null || p.getCategory().equals(""))
+			if (p.getCategory() == null || p.getCategory().equals(""))
 				throw new ResponseEntityException("O atributo category não foi informado ou é nulo", "400");
-			if(p.getBrand() == null || p.getBrand().equals(""))
+			if (p.getBrand() == null || p.getBrand().equals(""))
 				throw new ResponseEntityException("O atributo brand não foi informado ou é nulo", "400");
-			if(p.getPrice() == null || p.getPrice().equals(""))
+			if (p.getPrice() == null || p.getPrice().equals(""))
 				throw new ResponseEntityException("O atributo price não foi informado ou é nulo", "400");
-			if(p.getQuantity() == null || p.getQuantity().equals(""))
+			if (p.getQuantity() == null || p.getQuantity().equals(""))
 				throw new ResponseEntityException("O atributo quantity não foi informado ou é nulo", "400");
-			if(p.getFreeShipping() == null)
+			if (p.getFreeShipping() == null)
 				throw new ResponseEntityException("O atributo freeShipping não foi informado ou é nulo", "400");
-			if(p.getPrestige() == null || p.getPrestige().equals(""))
+			if (p.getPrestige() == null || p.getPrestige().equals(""))
 				throw new ResponseEntityException("O atributo prestige não foi informado ou é nulo", "400");
-			else{
-				for(int i=0; i<p.getPrestige().length(); i++){
-					if(p.getPrestige().charAt(i) != '*')
+			else {
+				for (int i = 0; i < p.getPrestige().length(); i++) {
+					if (p.getPrestige().charAt(i) != '*')
 						throw new ResponseEntityException("O atributo prestige deve aceitar apenas *", "400");
 				}
 			}
@@ -191,5 +191,31 @@ public class ArticlesService {
 
 		this.salvarProdutos(articles);
 		return ResponseEntity.created(uri).body(ArticlesDTO.converte(articles));
+	}
+
+	public ResponseEntity<String> valideEstoque(ArticlesPurchase articlesPurchase) {
+		ArrayList<Produto> produtos = new ArrayList<Produto>(articlesRepository.desserializaProdutos());
+		ArrayList<ArticlesPurchaseDTO> listaArticlesPuschase = new ArrayList<ArticlesPurchaseDTO>();
+
+		for (ArticlesPurchaseDTO dto : articlesPurchase.getArticlesPurchaseRequest()) {
+			listaArticlesPuschase.add(dto);
+		}
+
+		for (Produto p : produtos) {
+			for (ArticlesPurchaseDTO apd : listaArticlesPuschase) {
+				if (p.getProductId() == apd.getProductId()) {
+					if (p.getQuantity() >= apd.getQuantity()) {
+						//TODO sobrecrever carrinho
+						p.setQuantity(p.getQuantity() - apd.getQuantity());
+						break;
+					} else {
+						//TODO caso não tenha produto em estoque
+						return ResponseEntity.ok("Erro");
+					}
+				}
+			}
+		}
+		articlesRepository.serializaProdutos(produtos);
+		return null;
 	}
 }
