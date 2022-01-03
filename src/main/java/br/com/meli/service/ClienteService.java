@@ -1,5 +1,6 @@
 package br.com.meli.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +42,16 @@ public class ClienteService {
 				.findFirst()
 				.map(Cliente::getStatus)
 				.orElse(null); // TODO: implement orElseThrow(error)
+	}
+
+	public List<ClienteDTO> buscaClienteEstado(String estado) {
+		if (!estado.matches("[A-Za-z]{2}")) {
+			throw new ResponseEntityException("Informe a sigla do estado em 2 caracteres", "400");
+		}
+		return clienteRepository.getAll().stream()
+				.filter(e -> e.getEstado().equalsIgnoreCase(estado))
+				.map(ClienteDTO::converteToDTO)
+				.collect(Collectors.toList());
 	}
 
 	public Cliente buscaAdminCliente(String email) {
@@ -98,4 +109,5 @@ public class ClienteService {
 
 		return "Sessão para:" + "iniciada";
 	}
+
 }

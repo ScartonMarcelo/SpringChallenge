@@ -3,10 +3,13 @@ package br.com.meli.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +47,12 @@ public class ClientController {
 		return ResponseEntity.ok().body(clienteService.buscaCliente(email));
 	}
 
+	@GetMapping("/user/{estado}")
+	private ResponseEntity<List<ClienteDTO>> buscaClienteEstado(
+			@PathVariable("estado") String estado) {
+		return ResponseEntity.ok().body(clienteService.buscaClienteEstado(estado));
+	}
+
 	@PatchMapping("/user/session")
 	private ResponseEntity<String> sessionCliente(
 			@RequestParam(value = "email", required = true) String email,
@@ -54,6 +63,7 @@ public class ClientController {
 	@GetMapping("/user/attributes")
 	private ResponseEntity<ClienteDTO> mudaAtributo(
 			@RequestParam(value = "email", required = true) String email,
+			@RequestParam(value = "estado", required = true) String estado,
 			@RequestParam(value = "emailChange", required = false) String emailChange,
 			@RequestParam(value = "password", required = false) String password) {
 		return ResponseEntity.ok().body(clienteService.mudaAtributo(email, emailChange, password));
